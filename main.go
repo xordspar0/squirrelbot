@@ -1,33 +1,31 @@
 package main
 
 import (
+	"neolog.xyz/squirrelbot/bot"
+	"neolog.xyz/squirrelbot/config"
+
 	"errors"
 	"fmt"
 	"log"
 	"os"
 )
 
-type serverConfig struct {
-	name string
-	endpoint string
-}
-
 var botname = "squirrelbot"
-var config *serverConfig
 
 func main() {
-	if err := run(config); err != nil {
+	var c *config.ServerConfig
+	if err := run(c); err != nil {
 		log.Fatalln(err.Error())
 	}
 }
 
-func run(config *serverConfig) error {
-	config.name = os.Getenv("SERVER_NAME")
-	config.endpoint = fmt.Sprintf("/%s/", botname)
+func run(c *config.ServerConfig) error {
+	c.Name = os.Getenv("SERVER_NAME")
+	c.Endpoint = fmt.Sprintf("/%s/", botname)
 
-	if config.name == "" {
+	if c.Name == "" {
 		return errors.New("Server domain name is not set")
 	}
 
-	return bot.Exec(config)
+	return bot.Exec(c)
 }
