@@ -2,7 +2,6 @@ package main
 
 import (
 	"neolog.xyz/squirrelbot/bot"
-	"neolog.xyz/squirrelbot/config"
 
 	"errors"
 	"fmt"
@@ -13,13 +12,13 @@ import (
 var botname = "squirrelbot"
 
 func main() {
-	var c *config.ServerConfig
+	var c *bot.ServerConfig
 	if err := run(c); err != nil {
 		log.Fatalln(err.Error())
 	}
 }
 
-func run(c *config.ServerConfig) error {
+func run(c *bot.ServerConfig) error {
 	c.Name = os.Getenv("SERVER_NAME")
 	c.Endpoint = fmt.Sprintf("/%s/", botname)
 
