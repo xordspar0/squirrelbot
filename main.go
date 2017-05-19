@@ -3,6 +3,8 @@ package main
 import (
 	"neolog.xyz/squirrelbot/bot"
 
+	"github.com/urfave/cli"
+
 	"errors"
 	"fmt"
 	"log"
@@ -10,21 +12,45 @@ import (
 )
 
 var botname = "squirrelbot"
+var version = "devel"
+var app *cli.App
 
 func main() {
-	c := &bot.ServerConfig{}
-	if err := run(c); err != nil {
+	app := cli.NewApp()
+	app.Name = botname
+	app.Usage = "A Telegram bot that stashes away links that you send it so " +
+		"that you can view them later."
+	app.Action = run
+	app.Version = version
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:   "server-name",
+			Usage:  "The domain name of the server where this bot can be reached",
+			EnvVar: "SERVER_NAME",
+		},
+		cli.IntFlag{
+			Name:   "port",
+			Value:  1327,
+			Usage:  "The port to run the server on",
+			EnvVar: "BOT_PORT",
+		},
+	}
+
+	if err := app.Run(os.Args); err != nil {
 		log.Fatalln(err.Error())
 	}
 }
 
-func run(c *bot.ServerConfig) error {
-	c.Name = os.Getenv("SERVER_NAME")
-	c.Endpoint = fmt.Sprintf("/%s/", botname)
+func run(c *cli.Context) error {
+	config := &bot.ServerConfig{
+		Name:     c.String("server-name"),
+		Endpoint: fmt.Sprintf("/%s/", botname),
+		Port:     c.Int("port"),
+	}
 
-	if c.Name == "" {
+	if config.Name == "" {
 		return errors.New("Server domain name is not set")
 	}
 
-	return bot.Exec(c)
+	return bot.Start(config)
 }

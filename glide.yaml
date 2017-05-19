@@ -1,0 +1,3 @@
+package: neolog.xyz/squirrelbot
+import:
+- package: github.com/urfave/cli

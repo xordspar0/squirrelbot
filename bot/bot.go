@@ -1,9 +1,11 @@
 package bot
 
 import (
+	"fmt"
 	"net/http"
 )
 
-func Exec(c *ServerConfig) error {
-	return http.ListenAndServe(":80", nil)
+func Start(c *ServerConfig) error {
+	listenAddr := fmt.Sprintf("%d:%s", c.Port, c.Endpoint)
+	return http.ListenAndServe(listenAddr, nil)
 }
