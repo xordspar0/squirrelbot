@@ -12,7 +12,7 @@ import (
 var botname = "squirrelbot"
 
 func main() {
-	var c *bot.ServerConfig
+	c := &bot.ServerConfig{}
 	if err := run(c); err != nil {
 		log.Fatalln(err.Error())
 	}
