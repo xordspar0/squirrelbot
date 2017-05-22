@@ -34,6 +34,11 @@ func main() {
 			Usage:  "The port to run the server on",
 			EnvVar: "BOT_PORT",
 		},
+		cli.StringFlag{
+			Name:   "token",
+			Usage:  "The authentication token for the Telegram API",
+			EnvVar: "TELEGRAM_TOKEN",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -44,8 +49,9 @@ func main() {
 func run(c *cli.Context) error {
 	config := &bot.ServerConfig{
 		Name:     c.String("server-name"),
-		Endpoint: fmt.Sprintf("/%s/", botname),
-		Port:     c.Int("port"),
+		Endpoint: fmt.Sprintf("/%s_%s/", botname, c.String("token")),
+		Port:     c.String("port"),
+		Token:    c.String("token"),
 	}
 
 	if config.Name == "" {
