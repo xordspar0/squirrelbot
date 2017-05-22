@@ -1,0 +1,6 @@
+[ ] Ping Telegram servers to turn on webhook
+[ ] Receive messages
+[ ] Find links in messages
+[ ] Ask user for confirmation (say whether we detected an article or video) (use buttons)
+[ ] Recognize videos that youtube-dl can download
+
