@@ -18,6 +18,7 @@ func Start(c *ServerConfig) error {
 func setWebhook(c *ServerConfig, address string) error {
 	// Form request JSON.
 	reqMap := make(map[string]string)
+	reqMap["url"] = address
 	reqJson, err := json.Marshal(reqMap)
 	if err != nil {
 		return errors.New("Failed to connect to Telegram API: " + err.Error())
