@@ -5,9 +5,11 @@ import (
 
 	"github.com/urfave/cli"
 
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"log"
+	"math/big"
 	"os"
 )
 
@@ -47,9 +49,17 @@ func main() {
 }
 
 func run(c *cli.Context) error {
+	// Generate a random secret that for the webhook endpoint.
+	var max big.Int
+	max.Exp(big.NewInt(2), big.NewInt(128), nil)
+	randomSecret, err := rand.Int(rand.Reader, &max)
+	if err != nil {
+		return err
+	}
+
 	config := &bot.ServerConfig{
 		Name:     c.String("server-name"),
-		Endpoint: fmt.Sprintf("/%s_%s/", botname, c.String("token")),
+		Endpoint: fmt.Sprintf("/%s_%x/", botname, randomSecret),
 		Port:     c.String("port"),
 		Token:    c.String("token"),
 	}
