@@ -1,6 +1,8 @@
 package bot
 
 import (
+	"github.com/mvdan/xurls"
+
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -34,7 +36,11 @@ func botListener(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if message, ok := body["message"].(map[string]interface{}); ok {
-		log.Println(message["text"].(string))
+		bodyText := message["text"].(string)
+		url := xurls.Strict.FindString(bodyText)
+		if url != "" {
+			log.Println("Found this URL: " + url)
+		}
 	} else {
 		log.Printf("Update %d has no message", message["update_id"])
 	}
