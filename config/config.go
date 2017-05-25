@@ -1,4 +1,4 @@
-package bot
+package config
 
 type ServerConfig struct {
 	Name     string

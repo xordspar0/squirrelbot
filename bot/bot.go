@@ -1,21 +1,21 @@
 package bot
 
 import (
+	"neolog.xyz/squirrelbot/config"
+	"neolog.xyz/squirrelbot/telegram"
+
 	"github.com/mvdan/xurls"
 
-	"bytes"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-func Start(c *ServerConfig) error {
+func Start(c *config.ServerConfig) error {
 	log.Println("Setting up endpoint at " + c.Endpoint)
 	http.HandleFunc(c.Endpoint, botListener)
-	err := setWebhook(c, c.Name+c.Endpoint)
+	err := telegram.SetWebhook(c, c.Name+c.Endpoint)
 	if err != nil {
 		return err
 	}
@@ -39,40 +39,15 @@ func botListener(w http.ResponseWriter, r *http.Request) {
 		bodyText := message["text"].(string)
 		url := xurls.Strict.FindString(bodyText)
 		if url != "" {
-			log.Println("Found this URL: " + url)
+			if len(url) > 23 && url[:23] == "https://www.youtube.com" {
+				log.Println("Found this Youtube video: " + url)
+				handleYoutube(url)
+			} else {
+				log.Println("Found this link: " + url)
+				handleLink(url)
+			}
 		}
 	} else {
 		log.Printf("Update %d has no message", message["update_id"])
 	}
-}
-
-// setWebhook establishes a connection with the Telegram server and tells
-// Telegram where to send updates and messages.
-func setWebhook(c *ServerConfig, address string) error {
-	// Form request JSON.
-	reqMap := make(map[string]string)
-	reqMap["url"] = address
-	reqJson, err := json.Marshal(reqMap)
-	if err != nil {
-		return errors.New("Failed to connect to Telegram API: " + err.Error())
-	}
-
-	// Make the request.
-	resp, err := http.Post(
-		fmt.Sprintf("https://api.telegram.org/bot%s/setWebhook", c.Token),
-		"application/json",
-		bytes.NewReader(reqJson),
-	)
-
-	if err != nil {
-		return errors.New("Failed to connect to Telegram API: " + err.Error())
-	}
-	if resp.StatusCode == 200 {
-		log.Println("Successfully connected to Telegram")
-	} else {
-		message, _ := ioutil.ReadAll(resp.Body)
-		return errors.New("Failed to connect to Telegram API: " + resp.Status + " " + string(message))
-	}
-
-	return nil
 }
