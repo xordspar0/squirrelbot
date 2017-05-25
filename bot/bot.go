@@ -18,9 +18,6 @@ func Start(c *ServerConfig) error {
 		return err
 	}
 
-	// Switch to this after I get the cert figured out.
-	// Telegram requires https connections.
-	//func ListenAndServeTLS(addr, certFile, keyFile string, handler Handler) error
 	return http.ListenAndServe(":"+c.Port, nil)
 }
 

@@ -49,7 +49,9 @@ func main() {
 }
 
 func run(c *cli.Context) error {
-	// Generate a random secret that for the webhook endpoint.
+	// Generate a random secret for the webhook endpoint. If the endpoint is a
+	// secret between Telegram and the bot, we can be sure that requests to this
+	// port are from Telegram.
 	var max big.Int
 	max.Exp(big.NewInt(2), big.NewInt(128), nil)
 	randomSecret, err := rand.Int(rand.Reader, &max)
