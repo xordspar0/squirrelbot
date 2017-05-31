@@ -43,5 +43,7 @@ func SetWebhook(c *config.ServerConfig, address string) error {
 	return nil
 }
 
-func SendMessage() {
+func SendMessage(messageBody string) {
+	//TODO: Implement message sending.
+	log.Printf("Pretending to send message: '%s'", messageBody)
 }

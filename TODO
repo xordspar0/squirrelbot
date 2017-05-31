@@ -2,6 +2,8 @@
 [X] Receive messages
 [X] Find links in messages
 [ ] ~~(maybe) Ask user for confirmation (say whether we detected an article or video) (use buttons)~~
-[ ] Recognize videos that youtube-dl can download
+[X] Recognize videos that youtube-dl can download
 [ ] Acknowledge that the link has been processed
+[ ] Download videos on my server
+[ ] Stash links with an RSS feed
 
