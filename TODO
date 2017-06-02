@@ -6,4 +6,5 @@
 [X] Acknowledge that the link has been processed
 [ ] Download videos on my server
 [ ] Stash links with an RSS feed
+[ ] Load configuration from a config file (or just env vars); reload on SIGHUP
 
