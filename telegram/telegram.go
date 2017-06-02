@@ -1,8 +1,6 @@
 package telegram
 
 import (
-	"neolog.xyz/squirrelbot/config"
-
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -14,7 +12,7 @@ import (
 
 // SetWebhook establishes a connection with the Telegram server and tells
 // Telegram where to send updates and messages.
-func SetWebhook(c *config.ServerConfig, address string) error {
+func SetWebhook(address, token string) error {
 	// Form request JSON.
 	reqMap := make(map[string]string)
 	reqMap["url"] = address
@@ -25,7 +23,7 @@ func SetWebhook(c *config.ServerConfig, address string) error {
 
 	// Make the request.
 	resp, err := http.Post(
-		fmt.Sprintf("https://api.telegram.org/bot%s/setWebhook", c.Token),
+		fmt.Sprintf("https://api.telegram.org/bot%s/setWebhook", token),
 		"application/json",
 		bytes.NewReader(reqJson),
 	)
@@ -43,7 +41,32 @@ func SetWebhook(c *config.ServerConfig, address string) error {
 	return nil
 }
 
-func SendMessage(messageBody string) {
-	//TODO: Implement message sending.
-	log.Printf("Pretending to send message: '%s'", messageBody)
+func SendMessage(recipient, messageBody, token string) error {
+	log.Printf("Sending message: '%s'", messageBody) //debug
+
+	// Form request JSON.
+	reqMap := make(map[string]string)
+	reqMap["chat_id"] = recipient
+	reqMap["text"] = messageBody
+	reqJson, err := json.Marshal(reqMap)
+	if err != nil {
+		return errors.New("Failed to send message: " + err.Error())
+	}
+
+	// Send the message.
+	resp, err := http.Post(
+		fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", token),
+		"application/json",
+		bytes.NewReader(reqJson),
+	)
+
+	if err != nil {
+		return errors.New("Failed to send message: " + err.Error())
+	}
+	if resp.StatusCode != 200 {
+		message, _ := ioutil.ReadAll(resp.Body)
+		return errors.New("Failed to send message: " + resp.Status + " " + string(message))
+	}
+
+	return nil
 }

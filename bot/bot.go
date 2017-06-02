@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"neolog.xyz/squirrelbot/config"
 	"neolog.xyz/squirrelbot/telegram"
 
 	"github.com/mvdan/xurls"
@@ -12,22 +11,31 @@ import (
 	"net/http"
 )
 
-func Start(c *config.ServerConfig) error {
-	log.Println("Setting up endpoint at " + c.Endpoint)
-	http.HandleFunc(c.Endpoint, botListener)
-	err := telegram.SetWebhook(c, c.Name+c.Endpoint)
+type Bot struct {
+	Name     string
+	Endpoint string
+	Port     string
+	Token    string
+}
+
+func (b *Bot) Start() error {
+	log.Println("Setting up endpoint at " + b.Endpoint)
+	http.HandleFunc(b.Endpoint, b.botListener)
+	err := telegram.SetWebhook(b.Name+b.Endpoint, b.Token)
 	if err != nil {
 		return err
 	}
 
-	return http.ListenAndServe(":"+c.Port, nil)
+	return http.ListenAndServe(":"+b.Port, nil)
 }
 
-func botListener(w http.ResponseWriter, r *http.Request) {
+func (b *Bot) botListener(w http.ResponseWriter, r *http.Request) {
 	jsonBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 	}
+
+	log.Println(string(jsonBody)) //debug
 
 	var body map[string]interface{}
 	err = json.Unmarshal(jsonBody, &body)
@@ -41,10 +49,16 @@ func botListener(w http.ResponseWriter, r *http.Request) {
 		if url != "" {
 			if len(url) > 23 && url[:23] == "https://www.youtube.com" {
 				log.Println("Found this Youtube video: " + url)
-				handleYoutube(url)
+				err := handleYoutube(message, url, b.Token)
+				if err != nil {
+					log.Printf(err.Error())
+				}
 			} else {
 				log.Println("Found this link: " + url)
-				handleLink(url)
+				err := handleLink(message, url, b.Token)
+				if err != nil {
+					log.Printf(err.Error())
+				}
 			}
 		}
 	} else {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"neolog.xyz/squirrelbot/bot"
-	"neolog.xyz/squirrelbot/config"
 
 	"github.com/urfave/cli"
 
@@ -60,16 +59,16 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	config := &config.ServerConfig{
+	squirrelbot := &bot.Bot{
 		Name:     c.String("server-name"),
 		Endpoint: fmt.Sprintf("/%s_%x/", botname, randomSecret),
 		Port:     c.String("port"),
 		Token:    c.String("token"),
 	}
 
-	if config.Name == "" {
+	if squirrelbot.Name == "" {
 		return errors.New("Server domain name is not set")
 	}
 
-	return bot.Start(config)
+	return squirrelbot.Start()
 }
