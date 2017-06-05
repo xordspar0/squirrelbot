@@ -4,7 +4,7 @@
 [ ] ~~(maybe) Ask user for confirmation (say whether we detected an article or video) (use buttons)~~
 [X] Recognize videos that youtube-dl can download
 [X] Acknowledge that the link has been processed
-[ ] Download videos on my server
+[X] Download videos on my server
 [ ] Transfer files to the media server/PC
 	- scp/rsync?
 	- syncthing?
