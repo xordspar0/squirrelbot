@@ -35,8 +35,6 @@ func (b *Bot) botListener(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	log.Println(string(jsonBody)) //debug
-
 	var body map[string]interface{}
 	err = json.Unmarshal(jsonBody, &body)
 	if err != nil {
@@ -48,13 +46,11 @@ func (b *Bot) botListener(w http.ResponseWriter, r *http.Request) {
 		url := xurls.Strict.FindString(bodyText)
 		if url != "" {
 			if len(url) > 23 && url[:23] == "https://www.youtube.com" {
-				log.Println("Found this Youtube video: " + url)
 				err := handleYoutube(message, url, b.Token)
 				if err != nil {
 					log.Printf(err.Error())
 				}
 			} else {
-				log.Println("Found this link: " + url)
 				err := handleLink(message, url, b.Token)
 				if err != nil {
 					log.Printf(err.Error())

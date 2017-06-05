@@ -9,7 +9,7 @@
 	- scp/rsync?
 	- syncthing?
 	- custom client?
-[ ] Order videos by when they were added (just put a timestamp in the file name)
+[X] Order videos by when they were added (just put a timestamp in the file name)
 [ ] Generate .nfo and thumbnail files
 [ ] Stash links with an RSS feed
 [ ] Load configuration from a config file (or just env vars); reload on SIGHUP

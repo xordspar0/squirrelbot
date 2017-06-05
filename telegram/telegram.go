@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -31,9 +30,7 @@ func SetWebhook(address, token string) error {
 	if err != nil {
 		return errors.New("Failed to connect to Telegram API: " + err.Error())
 	}
-	if resp.StatusCode == 200 {
-		log.Println("Successfully connected to Telegram")
-	} else {
+	if resp.StatusCode != 200 {
 		message, _ := ioutil.ReadAll(resp.Body)
 		return errors.New("Failed to connect to Telegram API: " + resp.Status + " " + string(message))
 	}
@@ -42,8 +39,6 @@ func SetWebhook(address, token string) error {
 }
 
 func SendMessage(recipient, messageBody, token string) error {
-	log.Printf("Sending message: '%s'", messageBody) //debug
-
 	// Form request JSON.
 	reqMap := make(map[string]string)
 	reqMap["chat_id"] = recipient
