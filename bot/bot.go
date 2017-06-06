@@ -19,7 +19,7 @@ type Bot struct {
 }
 
 func (b *Bot) Start() error {
-	log.Println("Setting up endpoint at " + b.Endpoint)
+	log.Println("Setting up endpoint at " + b.Name + b.Endpoint)
 	http.HandleFunc(b.Endpoint, b.botListener)
 	err := telegram.SetWebhook(b.Name+b.Endpoint, b.Token)
 	if err != nil {

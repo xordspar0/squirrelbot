@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"os/exec"
 	"time"
-
-	"log"
 )
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
@@ -35,11 +33,14 @@ func handleYoutube(message map[string]interface{}, url, token string) error {
 	cmd := exec.Command(
 		"youtube-dl",
 		"--write-thumbnail",
-		fmt.Sprintf("--exec 'mv {} \"%s \"{}'", timestamp),
+		"--exec",
+		fmt.Sprintf("mv {} \"%s \"{}", timestamp),
 		url,
 	)
-	log.Println(cmd.Args) //debug
 	err = cmd.Run()
+	if err != nil {
+		return errors.New("Failed to download video: " + err.Error())
+	}
 
 	// Finally, send a message back to the user.
 	err = telegram.SendMessage(
