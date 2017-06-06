@@ -31,15 +31,14 @@ func handleYoutube(message map[string]interface{}, url, token string) error {
 	}
 
 	// youtube-dl downloads the video for us.
-	timestamp := time.Now().Local()
-	log.Println(timestamp) //debug
+	timestamp := time.Now().Local().Format(time.RFC3339)
 	cmd := exec.Command(
 		"youtube-dl",
 		"--write-thumbnail",
-		//fmt.Sprintf("--exec 'mv \"{}\" \"%s {}\"'", timestamp),
+		fmt.Sprintf("--exec 'mv {} \"%s \"{}'", timestamp),
 		url,
 	)
-	log.Println(cmd.Args)
+	log.Println(cmd.Args) //debug
 	err = cmd.Run()
 
 	// Finally, send a message back to the user.
