@@ -29,9 +29,30 @@ func handleYoutube(message map[string]interface{}, url, token string) error {
 		return err
 	}
 
+	// Use youtube-dl to get the name of the video.
+	cmd := exec.Command(
+		"youtube-dl",
+		"--get-title",
+		url,
+	)
+	stdout, err := cmd.StdoutPipe()
+	//TODO: handle error (don't crash)
+	err = cmd.Start()
+	out, err := ioutil.ReadAll(stdout)
+	//TODO: handle error (don't crash)
+	err = cmd.Wait()
+	//TODO: handle error (don't crash)
+
+	videoTitle := string(out)
+	if videoTitle == "" {
+		videoTitle = "an unknown video"
+	} else {
+		videoTitle = "\"" + videoTitle + "\""
+	}
+
 	// youtube-dl downloads the video for us.
 	timestamp := time.Now().Local().Format(time.RFC3339)
-	cmd := exec.Command(
+	cmd = exec.Command(
 		"youtube-dl",
 		"--write-thumbnail",
 		"--output",
@@ -51,15 +72,25 @@ func handleYoutube(message map[string]interface{}, url, token string) error {
 	}
 	err = cmd.Wait()
 
-	// If there is an error, log the standard error.
+	// If there was an error, log the standard error and send a report to the
+	// user.
 	if err != nil {
+		err = telegram.SendMessage(
+			recipient,
+			fmt.Sprintf("I couldn't save %s.", videoTitle),
+			token,
+		)
+		if err != nil {
+			return err
+		}
+
 		return errors.New("Failed to download video:\n" + string(errMessages))
 	}
 
 	// Finally, send a message back to the user.
 	err = telegram.SendMessage(
 		recipient,
-		"I saved your Youtube video.",
+		fmt.Sprintf("I saved your Youtube video, %s.", videoTitle),
 		token,
 	)
 	if err != nil {
