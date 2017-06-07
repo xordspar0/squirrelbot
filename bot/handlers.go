@@ -2,12 +2,10 @@ package bot
 
 import (
 	"neolog.xyz/squirrelbot/telegram"
+	"neolog.xyz/squirrelbot/youtubedl"
 
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"os/exec"
-	"time"
 )
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
@@ -18,73 +16,24 @@ func handleYoutube(message map[string]interface{}, url, token string) error {
 		return err
 	}
 
-	// Make sure that youtube-dl is installed.
-	_, err = exec.LookPath("youtube-dl")
-	if err != nil {
-		_ = telegram.SendMessage(
-			recipient,
-			"Error: The server does not have youtube-dl installed on it.",
-			token,
-		)
-		return err
-	}
-
-	// Use youtube-dl to get the name of the video.
-	cmd := exec.Command(
-		"youtube-dl",
-		"--get-title",
-		url,
-	)
-	stdout, err := cmd.StdoutPipe()
-	//TODO: handle error (don't crash)
-	err = cmd.Start()
-	out, err := ioutil.ReadAll(stdout)
-	//TODO: handle error (don't crash)
-	err = cmd.Wait()
-	//TODO: handle error (don't crash)
-
-	videoTitle := string(out)
+	videoTitle := youtubedl.GetTitle(url)
 	if videoTitle == "" {
-		videoTitle = "an unknown video"
+		videoTitle = "that video"
 	} else {
 		videoTitle = "\"" + videoTitle + "\""
 	}
 
-	// youtube-dl downloads the video for us.
-	timestamp := time.Now().Local().Format(time.RFC3339)
-	cmd = exec.Command(
-		"youtube-dl",
-		"--write-thumbnail",
-		"--output",
-		fmt.Sprintf("%s %s.%s", timestamp, "%(title)s", "%(ext)s"),
-		url,
-	)
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return err
-	}
-
-	err = cmd.Start()
-	// Catch any error messgages while the process is running.
-	errMessages, err := ioutil.ReadAll(stderr)
-	if err != nil {
-		return err
-	}
-	err = cmd.Wait()
+	err = youtubedl.Download(url)
 
 	// If there was an error, log the standard error and send a report to the
 	// user.
 	if err != nil {
-		err = telegram.SendMessage(
+		telegram.SendMessage(
 			recipient,
 			fmt.Sprintf("I couldn't save %s.", videoTitle),
 			token,
 		)
-		if err != nil {
-			return err
-		}
-
-		return errors.New("Failed to download video:\n" + string(errMessages))
+		return err
 	}
 
 	// Finally, send a message back to the user.
