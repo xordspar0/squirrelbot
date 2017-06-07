@@ -5,6 +5,7 @@ import (
 
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os/exec"
 	"time"
 )
@@ -37,9 +38,22 @@ func handleYoutube(message map[string]interface{}, url, token string) error {
 		fmt.Sprintf("mv {} \"%s \"{}", timestamp),
 		url,
 	)
-	err = cmd.Run()
+	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		return errors.New("Failed to download video: " + err.Error())
+		return err
+	}
+
+	err = cmd.Start()
+	// Catch any error messgages while the process is running.
+	errMessages, err := ioutil.ReadAll(stderr)
+	if err != nil {
+		return err
+	}
+	err = cmd.Wait()
+
+	// If there is an error, log the standard error.
+	if err != nil {
+		return errors.New("Failed to download video:\n" + string(errMessages))
 	}
 
 	// Finally, send a message back to the user.
