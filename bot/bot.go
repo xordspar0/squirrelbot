@@ -30,20 +30,20 @@ func (b *Bot) Start() error {
 }
 
 func (b *Bot) botListener(w http.ResponseWriter, r *http.Request) {
-	jsonBody, err := ioutil.ReadAll(r.Body)
+	rawBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	var body map[string]interface{}
-	err = json.Unmarshal(jsonBody, &body)
+	var jsonBody map[string]interface{}
+	err = json.Unmarshal(rawBody, &jsonBody)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	if message, ok := body["message"].(map[string]interface{}); ok {
-		bodyText := message["text"].(string)
-		url := xurls.Strict.FindString(bodyText)
+	if message, ok := jsonBody["message"].(telegram.Message); ok {
+		messageText := message["text"].(string)
+		url := xurls.Strict.FindString(messageText)
 		if url != "" {
 			if len(url) > 23 && url[:23] == "https://www.youtube.com" {
 				err := handleYoutube(message, url, b.Token)

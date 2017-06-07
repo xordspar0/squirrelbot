@@ -9,6 +9,8 @@ import (
 	"net/http"
 )
 
+type Message map[string]interface{}
+
 // SetWebhook establishes a connection with the Telegram server and tells
 // Telegram where to send updates and messages.
 func SetWebhook(address, token string) error {
@@ -64,4 +66,20 @@ func SendMessage(recipient, messageBody, token string) error {
 	}
 
 	return nil
+}
+
+// GetSenderID returns the ID that can be used to reach the sender of a given
+// message.
+func GetSenderID(message Message) (string, error) {
+	var id int
+
+	if _, ok := message["from"]; ok {
+		id = int(message["from"].(map[string]interface{})["id"].(float64))
+	} else if _, ok := message["chat"]; ok {
+		id = int(message["chat"].(map[string]interface{})["id"].(float64))
+	} else {
+		return "", errors.New("Error: message has no sender")
+	}
+
+	return fmt.Sprintf("%d", id), nil
 }
