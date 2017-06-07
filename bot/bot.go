@@ -41,7 +41,7 @@ func (b *Bot) botListener(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	if message, ok := jsonBody["message"].(telegram.Message); ok {
+	if message, ok := jsonBody["message"].(map[string]interface{}); ok {
 		messageText := message["text"].(string)
 		url := xurls.Strict.FindString(messageText)
 		if url != "" {
@@ -58,6 +58,6 @@ func (b *Bot) botListener(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		log.Printf("Update %d has no message", message["update_id"])
+		log.Printf("Update %d has no message", jsonBody["update_id"])
 	}
 }
