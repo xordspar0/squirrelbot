@@ -34,8 +34,8 @@ func handleYoutube(message map[string]interface{}, url, token string) error {
 	cmd := exec.Command(
 		"youtube-dl",
 		"--write-thumbnail",
-		"--exec",
-		fmt.Sprintf("mv {} \"%s \"{}", timestamp),
+		"--output",
+		fmt.Sprintf("%s %s.%s", timestamp, "%(title)s", "%(ext)s"),
 		url,
 	)
 	stderr, err := cmd.StderrPipe()
