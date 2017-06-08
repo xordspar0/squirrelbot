@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os/exec"
+	"strings"
 	"time"
 )
 
@@ -78,7 +79,7 @@ func GetTitle(url string) (videoTitle string) {
 		return
 	}
 
-	videoTitle = string(out)
+	videoTitle = strings.TrimSpace(string(out))
 
 	// If there are any errors getting the video name, then just leave it blank.
 	return
