@@ -11,14 +11,14 @@ import (
 	"net/http"
 )
 
-type Bot struct {
+type BotServer struct {
 	Name     string
 	Endpoint string
 	Port     string
 	Token    string
 }
 
-func (b *Bot) Start() error {
+func (b *BotServer) Start() error {
 	log.Println("Setting up endpoint at " + b.Name + b.Endpoint)
 	http.HandleFunc(b.Endpoint, b.botListener)
 	err := telegram.SetWebhook(b.Name+b.Endpoint, b.Token)
@@ -29,7 +29,7 @@ func (b *Bot) Start() error {
 	return http.ListenAndServe(":"+b.Port, nil)
 }
 
-func (b *Bot) botListener(w http.ResponseWriter, r *http.Request) {
+func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 	rawBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

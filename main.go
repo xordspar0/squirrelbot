@@ -67,16 +67,16 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	squirrelbot := &bot.Bot{
+	squirrelbotServer := &bot.BotServer{
 		Name:     c.String("server-name"),
 		Endpoint: fmt.Sprintf("/%s_%x/", botname, randomSecret),
 		Port:     c.String("port"),
 		Token:    c.String("token"),
 	}
 
-	if squirrelbot.Name == "" {
+	if squirrelbotServer.Name == "" {
 		return errors.New("Server domain name is not set")
 	}
 
-	return squirrelbot.Start()
+	return squirrelbotServer.Start()
 }
