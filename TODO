@@ -9,7 +9,7 @@ SquirrelBot
 [X] Acknowledge that the link has been processed
 [X] Download videos on my server
 [X] Order videos by when they were added (just put a timestamp in the file name)
-[ ] Allow a command-line arg for specifying the download directory
+[X] Allow a command-line arg for specifying the download directory
 [X] Generate thumbnail files
 [ ] Generate .nfo files
 [ ] Handle videos from other websites

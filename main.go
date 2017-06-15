@@ -34,12 +34,17 @@ func main() {
 			Name:   "port",
 			Value:  1327,
 			Usage:  "The port to run the server on",
-			EnvVar: "BOT_PORT",
+			EnvVar: "SQUIRRELBOT_PORT",
 		},
 		cli.StringFlag{
 			Name:   "token",
 			Usage:  "The authentication token for the Telegram API",
 			EnvVar: "TELEGRAM_TOKEN",
+		},
+		cli.StringFlag{
+			Name:   "dir, d",
+			Usage:  "The directory to store downloaded files",
+			EnvVar: "SQUIRRELBOT_DIR",
 		},
 	}
 
@@ -49,6 +54,9 @@ func main() {
 }
 
 func run(c *cli.Context) error {
+	// Change to the specified directory so that downloads will go there.
+	os.Chdir(c.String("dir"))
+
 	// Generate a random secret for the webhook endpoint. If the endpoint is a
 	// secret between Telegram and the bot, we can be sure that requests to this
 	// port are from Telegram.
