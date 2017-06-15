@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os/exec"
 	"strings"
-	"time"
 )
 
 // Make sure that youtube-dl is installed.
@@ -17,14 +16,12 @@ func init() {
 	}
 }
 
-// Download uses youtube-dl to download a video and its thumbnail.
-func Download(url string) error {
-	timestamp := time.Now().Local().Format(time.RFC3339)
+// Download uses youtube-dl to download a video.
+func Download(url, prefix string) error {
 	cmd := exec.Command(
 		"youtube-dl",
-		"--write-thumbnail",
 		"--output",
-		fmt.Sprintf("%s %s.%s", timestamp, "%(title)s", "%(ext)s"),
+		fmt.Sprintf("%s%s.%s", prefix, "%(title)s", "%(ext)s"),
 		url,
 	)
 	stderr, err := cmd.StderrPipe()
@@ -35,6 +32,42 @@ func Download(url string) error {
 	err = cmd.Start()
 	if err != nil {
 		return errors.New("youtubedl: Failed to download video: " + err.Error())
+	}
+
+	// Catch any error messgages while the process is running.
+	errMessages, err := ioutil.ReadAll(stderr)
+	if err != nil {
+		return errors.New("youtubedl: " + err.Error())
+	}
+	err = cmd.Wait()
+	if err != nil {
+		return errors.New("External program youtube-dl: \n" + string(errMessages))
+	}
+
+	return nil
+}
+
+// Download uses youtube-dl to download the thumbnail of a video.
+func DownloadThumbnail(url, prefix string) error {
+	// Skip the download of the video itself, but download the thumbnail. Put a
+	// "-thumb" suffix on the file name because that is the format that Kodi
+	// recognizes.
+	cmd := exec.Command(
+		"youtube-dl",
+		"--skip-download",
+		"--write-thumbnail",
+		"--output",
+		fmt.Sprintf("%s %s-thumb.%s", prefix, "%(title)s", "%(ext)s"),
+		url,
+	)
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return errors.New("youtubedl: Failed to download thumbnail: " + err.Error())
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return errors.New("youtubedl: Failed to download thumbnail: " + err.Error())
 	}
 
 	// Catch any error messgages while the process is running.

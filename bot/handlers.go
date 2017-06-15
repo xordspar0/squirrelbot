@@ -5,6 +5,7 @@ import (
 	"github.com/xordspar0/squirrelbot/youtubedl"
 
 	"fmt"
+	"time"
 )
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
@@ -22,10 +23,9 @@ func handleYoutube(message telegram.Message, url, token string) error {
 		videoTitle = "\"" + videoTitle + "\""
 	}
 
-	err = youtubedl.Download(url)
-
-	// If there was an error, log the standard error and send a report to the
-	// user.
+	// youtube-dl downloads the video and its thumbnail.
+	timestamp := fmt.Sprintf("%s ", time.Now().Local().Format(time.RFC3339))
+	err = youtubedl.Download(url, timestamp)
 	if err != nil {
 		telegram.SendMessage(
 			recipient,
@@ -34,6 +34,19 @@ func handleYoutube(message telegram.Message, url, token string) error {
 		)
 		return err
 	}
+
+	err = youtubedl.DownloadThumbnail(url, timestamp)
+	if err != nil {
+		telegram.SendMessage(
+			recipient,
+			fmt.Sprintf("I couldn't save a thumbnail for %s.", videoTitle),
+			token,
+		)
+		return err
+	}
+
+	// Make a .nfo file for the video.
+	// TODO: implement this
 
 	// Finally, send a message back to the user.
 	err = telegram.SendMessage(
