@@ -1,7 +1,7 @@
 package main
 
 import (
-	"neolog.xyz/squirrelbot/bot"
+	"github.com/xordspar0/squirrelbot/bot"
 
 	"github.com/urfave/cli"
 

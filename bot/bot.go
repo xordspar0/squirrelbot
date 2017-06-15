@@ -1,7 +1,7 @@
 package bot
 
 import (
-	"neolog.xyz/squirrelbot/telegram"
+	"github.com/xordspar0/squirrelbot/telegram"
 
 	"github.com/mvdan/xurls"
 

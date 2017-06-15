@@ -1,8 +1,8 @@
 package bot
 
 import (
-	"neolog.xyz/squirrelbot/telegram"
-	"neolog.xyz/squirrelbot/youtubedl"
+	"github.com/xordspar0/squirrelbot/telegram"
+	"github.com/xordspar0/squirrelbot/youtubedl"
 
 	"fmt"
 )

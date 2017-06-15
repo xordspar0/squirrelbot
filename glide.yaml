@@ -1,4 +1,4 @@
-package: neolog.xyz/squirrelbot
+package: github.com/xordspar0/squirrelbot
 import:
 - package: github.com/urfave/cli
 - package: github.com/mvdan/xurls

@@ -1,8 +1,8 @@
-hash: 0e81a4560965cd010d0bb3c663875417131a0d01c37905706f15b384ec982b51
-updated: 2017-05-25T12:06:09.120684131-05:00
+hash: 9941f3f7d83b0b8c9122263145fc18a6145ff312848257d36fc2dfae78993df5
+updated: 2017-06-14T22:19:05.365837199-05:00
 imports:
 - name: github.com/mvdan/xurls
   version: d315b61cf6727664f310fa87b3197e9faf2a8513
 - name: github.com/urfave/cli
-  version: d70f47eeca3afd795160003bc6e28b001d60c67c
+  version: cf33a9befefdd6c6ea1a236ab6d546e797a62cbf
 testImports: []
