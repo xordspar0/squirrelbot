@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type BotServer struct {
@@ -43,9 +44,11 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 
 	if message, ok := jsonBody["message"].(map[string]interface{}); ok {
 		messageText := message["text"].(string)
-		url := xurls.Strict.FindString(messageText)
-		if url != "" {
-			if len(url) > 23 && url[:23] == "https://www.youtube.com" {
+		if url := xurls.Strict.FindString(messageText); url != "" {
+			if strings.HasPrefix(url, "http://www.youtube.com") ||
+				strings.HasPrefix(url, "https://www.youtube.com") ||
+				strings.HasPrefix(url, "http://youtu.be") ||
+				strings.HasPrefix(url, "https://youtu.be") {
 				err := handleYoutube(message, url, b.Token)
 				if err != nil {
 					log.Printf(err.Error())
