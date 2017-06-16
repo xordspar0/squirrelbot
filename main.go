@@ -27,19 +27,19 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "server-name",
-			Usage:  "The domain name of the server where this bot can be reached",
+			Usage:  "The domain name of the server where this bot can be reached (required)",
 			EnvVar: "SERVER_NAME",
+		},
+		cli.StringFlag{
+			Name:   "token",
+			Usage:  "The authentication token for the Telegram API (required)",
+			EnvVar: "TELEGRAM_TOKEN",
 		},
 		cli.IntFlag{
 			Name:   "port",
 			Value:  1327,
 			Usage:  "The port to run the server on",
 			EnvVar: "SQUIRRELBOT_PORT",
-		},
-		cli.StringFlag{
-			Name:   "token",
-			Usage:  "The authentication token for the Telegram API",
-			EnvVar: "TELEGRAM_TOKEN",
 		},
 		cli.StringFlag{
 			Name:   "dir, d",
@@ -76,6 +76,9 @@ func run(c *cli.Context) error {
 
 	if squirrelbotServer.Name == "" {
 		return errors.New("Server domain name is not set")
+	}
+	if squirrelbotServer.Token == "" {
+		return errors.New("Telegram API token is not set")
 	}
 
 	return squirrelbotServer.Start()

@@ -6,6 +6,48 @@ later. Currently, it only saves Youtube videos and formats them for easy viewing
 in Kodi. On the roadmap are handling videos from other websites and saving
 arbitrary links in a personal RSS feed.
 
+Building
+--------
+
+### Dependencies
+
+Dependencies are managed by [Glide](http://glide.sh/), so install Glide and then
+run `glide install`.
+
+[youtube-dl](https://rg3.github.io/youtube-dl/) is a runtime dependency. You
+should be able to install it through your system package manager.
+
+### Build
+
+To build squirrelbot, simply run `go build .` in the root directory.
+
+Running
+-------
+
+To run this bot, you first need to get an API token from Telegram. The directions
+for doing that are [here](https://core.telegram.org/bots).
+
+Once you have your API token, run SquirrelBot with the required command-line
+arguments:
+
+```sh
+squirrelbot --server-name=http://myserver.example.com --port=80 --token=<your telegram token>
+```
+
+I use a reverse proxy to forward traffic from port 443 to SquirrelBot's default
+port. You can also set up SquirrelBot directly on port 80 or 443. Just make sure
+to use the appropriate port for your url scheme:
+
+*	Port 80 for http://
+*	Port 443 for https://
+
+You can optionally specify a directory to download the videos to with the
+`--dir` argument:
+
+```sh
+squirrelbot --server-name=myserver.example.com --port=80 --token=<your telegram token> \
+	--dir="Youtube Videos"
+```
 
 Transfering Video Files
 -----------------------
