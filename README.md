@@ -24,6 +24,8 @@ To build squirrelbot, simply run `go build .` in the root directory.
 Running
 -------
 
+### Telegram Token
+
 To run this bot, you first need to get an API token from Telegram. The directions
 for doing that are [here](https://core.telegram.org/bots).
 
@@ -34,12 +36,16 @@ arguments:
 squirrelbot --server-name=http://myserver.example.com --port=80 --token=<your telegram token>
 ```
 
+### Ports
+
 I use a reverse proxy to forward traffic from port 443 to SquirrelBot's default
 port. You can also set up SquirrelBot directly on port 80 or 443. Just make sure
 to use the appropriate port for your url scheme:
 
 *	Port 80 for http://
 *	Port 443 for https://
+
+### Download Directory
 
 You can optionally specify a directory to download the videos to with the
 `--dir` argument:
