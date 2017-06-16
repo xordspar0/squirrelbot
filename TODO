@@ -1,6 +1,9 @@
 SquirrelBot
 ===========
 
+1.0 Goals
+---------
+
 [X] Ping Telegram servers to turn on webhook
 [X] Receive messages
 [X] Find links in messages
@@ -12,9 +15,19 @@ SquirrelBot
 [X] Allow a command-line arg for specifying the download directory
 [X] Generate thumbnail files
 [ ] ~~Generate .nfo files~~
+[ ] ~~Write a systemd unit file~~ (there are differences in paths between systems)
+[ ] ~~Write a Makefile for easy local installation and to aid packagers~~ (it would be like 2 lines)
+[ ] Load configuration from a config file (or just env vars); ~~reload on SIGHUP~~
+
+Post-1.0
+--------
+
 [ ] Handle videos from other websites
-[ ] Load configuration from a config file (or just env vars); reload on SIGHUP
-[ ] Write a systemd unit file
+[ ] Distro packages
+
+2.0 Goals
+---------
 
 [ ] Stash links with an RSS feed
 [ ] Custom file transfer client for media servers/PCs?
+[ ] Authentication
