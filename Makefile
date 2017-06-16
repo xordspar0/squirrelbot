@@ -10,7 +10,7 @@ build:
 fmt:
 	gofmt -s -l -w $(shell find . -name '*.go' -not -path '*vendor*')
 
-install: build
+install:
 	install -m 755 "${binname}" "${prefix}/bin/"
 	install -m 644 system/squirrelbot.service "${systemd_unit_path}/"
 
