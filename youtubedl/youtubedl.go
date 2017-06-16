@@ -57,7 +57,7 @@ func DownloadThumbnail(url, prefix string) error {
 		"--skip-download",
 		"--write-thumbnail",
 		"--output",
-		fmt.Sprintf("%s %s-thumb.%s", prefix, "%(title)s", "%(ext)s"),
+		fmt.Sprintf("%s%s-thumb.%s", prefix, "%(title)s", "%(ext)s"),
 		url,
 	)
 	stderr, err := cmd.StderrPipe()
