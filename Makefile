@@ -5,7 +5,7 @@ systemd_unit_path=/etc/systemd/system
 .PHONY: build clean fmt install uninstall
 
 build:
-	go build -o "$(binname)" .
+	go build -o "$(binname)" ./cmd/squirrelbot
 
 fmt:
 	gofmt -s -l -w $(shell find . -name '*.go' -not -path '*vendor*')
