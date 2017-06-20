@@ -1,0 +1,17 @@
+SQUIRRELBOT(1)
+==============
+:doctype: manpage
+
+NAME
+----
+squirrelbot - a Telegram bot that stashes links
+
+SYNOPSIS
+--------
+
+*squirrelbot* --server-name=VALUE [--port=VALUE] --token=VALUE [--dir=VALUE]
+*squirrelbot* --help | -h
+
+DESCRIPTION
+-----------
+
