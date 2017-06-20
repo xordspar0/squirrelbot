@@ -16,7 +16,7 @@ SquirrelBot
 [X] Generate thumbnail files
 [ ] ~~Generate .nfo files~~
 [X] Write a Makefile for packagers
-[ ] Write a man page
+[X] Write a man page
 
 Post-1.0
 --------

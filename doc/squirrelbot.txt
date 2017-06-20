@@ -1,0 +1,89 @@
+SQUIRRELBOT(1)
+==============
+:doctype: manpage
+
+NAME
+----
+
+squirrelbot - a Telegram bot that stashes links
+
+SYNOPSIS
+--------
+
+*squirrelbot* --server-name=VALUE [--port=VALUE] --token=VALUE [--dir=VALUE]
+
+*squirrelbot* --help | -h
+
+DESCRIPTION
+-----------
+
+SquirrelBot is a Telegram bot that saves links that you send it for viewing
+later. It saves Youtube videos and formats them for easy viewing in Kodi.
+
+OPTIONS
+-------
+
+*--server-name*=<domain name> ::
+	The domain name of the server where this bot can be reached.
+
+*--token*=<telegram token> ::
+	The authentication token for the Telegram API. You can find directions for
+	obtaining your token at <https://core.telegram.org/bots>.
+
+*--port*=<port number> ::
++
+--
+The port to run the server on. *Default*: 1327
+
+I use a reverse proxy to forward traffic from port 443 to SquirrelBot's
+default port. You can also set up SquirrelBot directly on port 80 or 443.
+Just make sure to use the appropriate port for your url scheme:
+
+*	Port 80 for http://
+*	Port 443 for https://
+--
+
+*--dir, -d*=<path> ::
+	The directory to store downloaded files.
+
+*--version, -v* ::
+	Show the version and exit.
+
+*--help, -h* ::
+	Show the help message and exit.
+
+TRANSFERING VIDEO FILES
+-----------------------
+
+SquirrelBot downloads videos to a local directory that can be specified with the
+`--dir` option. The videos are formatted to be easy to view in Kodi. If you run
+this bot on a different server than your Kodi/media center, you will want to
+transfer your video files to your Kodi or media center box. Here are a couple
+ways to do that.
+
+.Sync with rsync
+
+*	On the receiving end, set up an rsync daemon that allows write-only access
+	to the right directory.
+*	On the sending end, write a simple script that uses `inotifywait` to copy
+	files via rsync.
+*	Optionally, after the file is successfully send, the script should delete
+	the file from the server.
+
+.Sync with Syncthing
+
+You can use Syncthing to send video files to their final destination. See
+https://docs.syncthing.net/intro/getting-started.html for instructions.
+
+COPYRIGHT
+---------
+
+Copyright © 2017 Jordan Christiansen. License GPLv3+: GNU GPL version 3 or later
+<http://gnu.org/licenses/gpl.html>. This is free software: you are free to
+change and redistribute it.  There is NO WARRANTY, to the extent  permitted by
+law.
+
+SEE ALSO
+--------
+
+youtube-dl(1)
