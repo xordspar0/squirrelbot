@@ -9,6 +9,9 @@ arbitrary links in a personal RSS feed.
 Building
 --------
 
+SquirrelBot is written in [Go](https://golang.org). You'll need the [Go
+toolchain](https://golang.org/doc/install) to build the bot.
+
 ### Dependencies
 
 Dependencies are managed by [Glide](http://glide.sh/), so install Glide and then
