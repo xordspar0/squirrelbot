@@ -1,5 +1,6 @@
 [Unit]
 Description=A Telegram bot that stashes links and videos
+Documentation=man:squirrelbot(1)
 Wants=network-online.target
 After=network-online.target
 
