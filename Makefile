@@ -1,11 +1,12 @@
 binname=squirrelbot
+version=devel
 prefix=/usr/local
 systemd_unit_path=/etc/systemd/system
 
 .PHONY: build clean fmt install uninstall
 
 build:
-	go build -o "$(binname)" ./cmd/squirrelbot
+	go build -ldflags "-X main.version=$(version)" -o "$(binname)" ./cmd/squirrelbot
 
 squirrelbot.1: doc/squirrelbot.txt
 	a2x -f manpage doc/squirrelbot.txt
