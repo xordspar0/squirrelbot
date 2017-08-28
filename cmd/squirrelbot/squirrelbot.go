@@ -47,6 +47,7 @@ func main() {
 			EnvVar: "SQUIRRELBOT_DIR",
 		},
 	}
+        app.HideHelp = true
 
 	if err := app.Run(os.Args); err != nil {
 		log.Fatalln(err.Error())
