@@ -69,6 +69,8 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		if url := xurls.Strict.FindString(messageText); url != "" {
 			if strings.HasPrefix(url, "http://www.youtube.com") ||
 				strings.HasPrefix(url, "https://www.youtube.com") ||
+				strings.HasPrefix(url, "http://m.youtube.com") ||
+				strings.HasPrefix(url, "https://m.youtube.com") ||
 				strings.HasPrefix(url, "http://youtu.be") ||
 				strings.HasPrefix(url, "https://youtu.be") {
 				err := handleYoutube(message, url, b.Directory, b.Token)
