@@ -10,7 +10,7 @@ squirrelbot - a Telegram bot that stashes links
 SYNOPSIS
 --------
 
-*squirrelbot* --server-name=VALUE [--port=VALUE] --token=VALUE [--dir=VALUE]
+*squirrelbot* --address=VALUE [--port=VALUE] --token=VALUE [--dir=VALUE]
 
 *squirrelbot* --help | -h
 
@@ -23,12 +23,13 @@ later. It saves Youtube videos and formats them for easy viewing in Kodi.
 OPTIONS
 -------
 
-*--server-name*=<domain name> ::
-	The domain name of the server where this bot can be reached.
+*--address*=<Web address> ::
+	The domain name or IP address of the server where this bot can be
+	reached.
 
 *--token*=<telegram token> ::
-	The authentication token for the Telegram API. You can find directions for
-	obtaining your token at <https://core.telegram.org/bots>.
+	The authentication token for the Telegram API. You can find directions
+	for obtaining your token at <https://core.telegram.org/bots>.
 
 *--port*=<port number> ::
 +
