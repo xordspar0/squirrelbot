@@ -22,7 +22,12 @@ should be able to install it through your system package manager.
 
 ### Build
 
-To build squirrelbot, simply run `go build .` in the root directory.
+To build squirrelbot, simply run `make` in the root directory. To install
+squirrelbot, run `make install` as root.
+
+Some build options are available as `make` variables. You can change the system
+config file location, systemd unit file location, and others. Look at the Makefile
+for details.
 
 Running
 -------
@@ -36,7 +41,7 @@ Once you have your API token, run SquirrelBot with the required command-line
 arguments:
 
 ```sh
-squirrelbot --server-name=http://myserver.example.com --port=80 --token=<your telegram token>
+squirrelbot --address=http://myserver.example.com --port=80 --token=<your telegram token>
 ```
 
 ### Ports
@@ -54,7 +59,7 @@ You can optionally specify a directory to download the videos to with the
 `--dir` argument:
 
 ```sh
-squirrelbot --server-name=myserver.example.com --port=80 --token=<your telegram token> \
+squirrelbot --address=myserver.example.com --port=80 --token=<your telegram token> \
 	--dir="Youtube Videos"
 ```
 
