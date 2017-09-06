@@ -10,7 +10,7 @@ import (
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
 // back to the user.
-func handleYoutube(message telegram.Message, url, token string) error {
+func handleYoutube(message telegram.Message, url, dir, token string) error {
 	recipient, err := telegram.GetSenderID(message)
 	if err != nil {
 		return err
@@ -25,7 +25,7 @@ func handleYoutube(message telegram.Message, url, token string) error {
 
 	// youtube-dl downloads the video and its thumbnail.
 	timestamp := fmt.Sprintf("%s ", time.Now().Local().Format(time.RFC3339))
-	err = youtubedl.Download(url, timestamp)
+	err = youtubedl.Download(url, dir, timestamp)
 	if err != nil {
 		telegram.SendMessage(
 			recipient,
@@ -35,7 +35,7 @@ func handleYoutube(message telegram.Message, url, token string) error {
 		return err
 	}
 
-	err = youtubedl.DownloadThumbnail(url, timestamp)
+	err = youtubedl.DownloadThumbnail(url, dir, timestamp)
 	if err != nil {
 		telegram.SendMessage(
 			recipient,

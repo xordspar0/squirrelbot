@@ -4,25 +4,47 @@ import (
 	"github.com/xordspar0/squirrelbot/telegram"
 
 	"github.com/mvdan/xurls"
+	"gopkg.in/yaml.v2"
 
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
 type BotServer struct {
-	Name     string
-	Endpoint string
-	Port     string
-	Token    string
+	Address   string `yaml:"address"`
+	Port      string `yaml:"port"`
+	Token     string `yaml:"token"`
+	Directory string `yaml:"directory"`
+	Endpoint  string
+}
+
+func (b *BotServer) LoadConfigFromFile(fileName string) error {
+	file, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		return err
+	}
+
+	err = yaml.Unmarshal(data, b)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (b *BotServer) Start() error {
-	log.Println("Setting up endpoint at " + b.Name + b.Endpoint)
+	log.Println("Setting up endpoint at " + b.Address + b.Endpoint)
 	http.HandleFunc(b.Endpoint, b.botListener)
-	err := telegram.SetWebhook(b.Name+b.Endpoint, b.Token)
+	err := telegram.SetWebhook(b.Address+b.Endpoint, b.Token)
 	if err != nil {
 		return err
 	}
@@ -49,7 +71,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 				strings.HasPrefix(url, "https://www.youtube.com") ||
 				strings.HasPrefix(url, "http://youtu.be") ||
 				strings.HasPrefix(url, "https://youtu.be") {
-				err := handleYoutube(message, url, b.Token)
+				err := handleYoutube(message, url, b.Directory, b.Token)
 				if err != nil {
 					log.Printf(err.Error())
 				}

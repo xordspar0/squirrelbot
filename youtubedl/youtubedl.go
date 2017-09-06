@@ -17,11 +17,11 @@ func init() {
 }
 
 // Download uses youtube-dl to download a video.
-func Download(url, prefix string) error {
+func Download(url, prefix, directory string) error {
 	cmd := exec.Command(
 		"youtube-dl",
 		"--output",
-		fmt.Sprintf("%s%s.%s", prefix, "%(title)s", "%(ext)s"),
+		fmt.Sprintf("%s/%s%s.%s", directory, prefix, "%(title)s", "%(ext)s"),
 		url,
 	)
 	stderr, err := cmd.StderrPipe()
@@ -48,7 +48,7 @@ func Download(url, prefix string) error {
 }
 
 // Download uses youtube-dl to download the thumbnail of a video.
-func DownloadThumbnail(url, prefix string) error {
+func DownloadThumbnail(url, prefix, directory string) error {
 	// Skip the download of the video itself, but download the thumbnail. Put a
 	// "-thumb" suffix on the file name because that is the format that Kodi
 	// recognizes.
@@ -57,7 +57,7 @@ func DownloadThumbnail(url, prefix string) error {
 		"--skip-download",
 		"--write-thumbnail",
 		"--output",
-		fmt.Sprintf("%s%s-thumb.%s", prefix, "%(title)s", "%(ext)s"),
+		fmt.Sprintf("%s/%s%s-thumb.%s", directory, prefix, "%(title)s", "%(ext)s"),
 		url,
 	)
 	stderr, err := cmd.StderrPipe()

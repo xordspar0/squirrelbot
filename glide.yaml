@@ -3,3 +3,4 @@ import:
 - package: github.com/urfave/cli
 - package: github.com/mvdan/xurls
   version: ~1.1.0
+- package: gopkg.in/yaml.v2

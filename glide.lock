@@ -1,8 +1,10 @@
-hash: 9941f3f7d83b0b8c9122263145fc18a6145ff312848257d36fc2dfae78993df5
-updated: 2017-06-14T22:19:05.365837199-05:00
+hash: 866bcf89ed2f3c0bd74d5568ceb50cfe5c71c91c3470bbae3355fa48c6e07eba
+updated: 2017-09-06T10:56:59.927381938-05:00
 imports:
 - name: github.com/mvdan/xurls
   version: d315b61cf6727664f310fa87b3197e9faf2a8513
 - name: github.com/urfave/cli
   version: cf33a9befefdd6c6ea1a236ab6d546e797a62cbf
+- name: gopkg.in/yaml.v2
+  version: cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b
 testImports: []

@@ -21,15 +21,14 @@ SquirrelBot
 Post-1.0
 --------
 
-[ ] Load configuration from a config file (or just env vars); ~~reload on SIGHUP~~
+[X] Load configuration from a config file (or just env vars); ~~reload on SIGHUP~~
 [ ] Distro packages
 	[ ] Write a systemd unit file (there are differences in paths between systems)
 [ ] Handle videos from other websites
-[ ] Detect IP address if no server name is specified
-
-2.0 Goals
----------
-
+[ ] Detect IP address if no server name is specified?
 [ ] Stash links with an RSS feed
 [ ] Custom file transfer client for media servers/PCs?
+[ ] Support multiple output backends?
+	[ ] RSS feed or Pocket for articles
+	[ ] Kodi plugin or RSS feed? for videos
 [ ] Authentication

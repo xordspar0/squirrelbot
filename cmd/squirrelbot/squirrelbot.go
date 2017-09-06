@@ -15,6 +15,7 @@ import (
 
 var botname = "squirrelbot"
 var version = "devel"
+var systemConfigFile = ""
 var app *cli.App
 
 func main() {
@@ -24,11 +25,13 @@ func main() {
 		"that you can view them later."
 	app.Action = run
 	app.Version = version
+	app.HideHelp = true
+
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:   "server-name",
-			Usage:  "The domain name of the server where this bot can be reached (required)",
-			EnvVar: "SERVER_NAME",
+			Name:   "address",
+			Usage:  "The address of the server where this bot can be reached (required)",
+			EnvVar: "SQUIRRELBOT_ADDRESS",
 		},
 		cli.StringFlag{
 			Name:   "token",
@@ -46,8 +49,11 @@ func main() {
 			Usage:  "The directory to store downloaded files",
 			EnvVar: "SQUIRRELBOT_DIR",
 		},
+		cli.StringFlag{
+			Name:  "config",
+			Usage: "The location of the server config file to use",
+		},
 	}
-        app.HideHelp = true
 
 	if err := app.Run(os.Args); err != nil {
 		log.Fatalln(err.Error())
@@ -55,9 +61,6 @@ func main() {
 }
 
 func run(c *cli.Context) error {
-	// Change to the specified directory so that downloads will go there.
-	os.Chdir(c.String("dir"))
-
 	// Generate a random secret for the webhook endpoint. If the endpoint is a
 	// secret between Telegram and the bot, we can be sure that requests to this
 	// port are from Telegram.
@@ -68,15 +71,38 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	squirrelbotServer := &bot.BotServer{
-		Name:     c.String("server-name"),
-		Endpoint: fmt.Sprintf("/%s_%x/", botname, randomSecret),
-		Port:     c.String("port"),
-		Token:    c.String("token"),
+	squirrelbotServer := &bot.BotServer{}
+
+	// Load config from a file first.
+	if fileName := c.String("config"); fileName != "" {
+		if err := squirrelbotServer.LoadConfigFromFile(fileName); err != nil {
+			log.Println("Error: Could not load config file:", err.Error)
+			return err
+		}
+	} else if systemConfigFile != "" {
+		if err := squirrelbotServer.LoadConfigFromFile(systemConfigFile); err != nil {
+			log.Println("Warning: Could not load system config file:", err.Error)
+		}
 	}
 
-	if squirrelbotServer.Name == "" {
-		return errors.New("Server domain name is not set")
+	// Add in settings from the command line.
+	if address := c.String("address"); address != "" {
+		squirrelbotServer.Address = address
+	}
+	if port := c.String("port"); port != "" {
+		squirrelbotServer.Port = port
+	}
+	if token := c.String("token"); token != "" {
+		squirrelbotServer.Token = token
+	}
+	if directory := c.String("dir"); directory != "" {
+		squirrelbotServer.Directory = directory
+	}
+
+	squirrelbotServer.Endpoint = fmt.Sprintf("/%s_%x/", botname, randomSecret)
+
+	if squirrelbotServer.Address == "" {
+		return errors.New("Server address is not set")
 	}
 	if squirrelbotServer.Token == "" {
 		return errors.New("Telegram API token is not set")
