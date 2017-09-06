@@ -3,7 +3,7 @@ package bot
 import (
 	"github.com/xordspar0/squirrelbot/telegram"
 
-	"github.com/mvdan/xurls"
+	"mvdan.cc/xurls"
 	"gopkg.in/yaml.v2"
 
 	"encoding/json"
