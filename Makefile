@@ -2,7 +2,7 @@ binname=squirrelbot
 version=devel
 prefix=/usr/local
 systemd_unit_path=/etc/systemd/system
-system_config_file=
+system_config_file=/etc/squirrelbot/config.yaml
 
 .PHONY: build clean fmt install uninstall
 
