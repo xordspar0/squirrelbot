@@ -1,5 +1,11 @@
+# Editing
+*.swp
+
+# Dependencies
+vendor
+
+# Build files
 bin/
 squirrelbot
 *.1
-*.swp
-vendor
+*.snap

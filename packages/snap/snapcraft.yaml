@@ -1,0 +1,23 @@
+name: squirrelbot
+version: '1.0.1'
+summary: A Telegram bot that stashes away links that you send it
+description: |
+  SquirrelBot is a Telegram bot that saves links that you send it for viewing
+  later. Currently, it only saves Youtube videos and formats them for easy
+  viewing in Kodi. On the roadmap are handling videos from other websites and
+  saving arbitrary links in a personal RSS feed.
+grade: devel
+confinement: strict
+
+parts:
+  squirrelbot:
+    source: ..
+    plugin: go
+    go-importpath: cmd/squirrelbot
+    stage-packages: [ youtube-dl ]
+
+apps:
+  squirrelbot:
+    command: env SQUIRRELBOT_CONFIG_FILE="$SNAP_COMMON/config.yaml" "$SNAP/bin/squirrelbot"
+    daemon: simple
+    plugs: [ home, network, network-bind ]
