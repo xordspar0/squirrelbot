@@ -9,3 +9,5 @@ bin/
 squirrelbot
 *.1
 *.snap
+packages/snap/snapcraft.yaml
+.snapcraft/
