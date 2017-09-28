@@ -17,7 +17,7 @@ func init() {
 }
 
 // Download uses youtube-dl to download a video.
-func Download(url, prefix, directory string) error {
+func Download(url, directory, prefix string) error {
 	cmd := exec.Command(
 		"youtube-dl",
 		"--output",
@@ -48,7 +48,7 @@ func Download(url, prefix, directory string) error {
 }
 
 // Download uses youtube-dl to download the thumbnail of a video.
-func DownloadThumbnail(url, prefix, directory string) error {
+func DownloadThumbnail(url, directory, prefix string) error {
 	// Skip the download of the video itself, but download the thumbnail. Put a
 	// "-thumb" suffix on the file name because that is the format that Kodi
 	// recognizes.
