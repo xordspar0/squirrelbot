@@ -10,4 +10,6 @@ squirrelbot
 *.1
 *.snap
 packages/snap/snapcraft.yaml
+packages/stage/
+packages/prime/
 .snapcraft/

@@ -15,9 +15,11 @@ parts:
     plugin: dump
     stage-packages: [ youtube-dl ]
     stage:
-      - squirrelbot
+      - bin/*
+      - usr/*
     prime:
-      - squirrelbot
+      - bin/*
+      - usr/*
 
 apps:
   squirrelbot:
