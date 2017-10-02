@@ -28,7 +28,7 @@ Post-1.0
 	[ ] Arch
 	[ ] Debian
 [ ] Handle videos from other websites
-[ ] Detect IP address if no server name is specified?
+[ ] ~~Detect IP address if no server name is specified?~~
 [ ] Stash links
 [ ] Support multiple output backends?
 	[ ] RSS feed or Pocket for articles
