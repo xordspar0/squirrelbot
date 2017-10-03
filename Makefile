@@ -4,7 +4,7 @@ prefix=/usr/local
 systemd_unit_path=/etc/systemd/system
 system_config_file=/etc/squirrelbot/config.yaml
 
-.PHONY: build clean fmt snap install uninstall
+.PHONY: build clean fmt install snap test uninstall
 
 build:
 	go build -ldflags "-X main.version=$(version) -X main.systemConfigFile=$(system_config_file)" -o "$(binname)" ./cmd/squirrelbot
@@ -12,11 +12,14 @@ build:
 squirrelbot.1: doc/squirrelbot.txt
 	a2x -f manpage doc/squirrelbot.txt
 
+snap: build
+	packages/build_snap.sh $(version)
+
 fmt:
 	gofmt -s -l -w $(shell find . -name '*.go' -not -path '*vendor*')
 
-snap: build squirrelbot.1
-	packages/build_snap.sh $(version)
+test:
+	go test $(shell glide novendor)
 
 install: squirrelbot.1
 	install -Dm 755 "$(binname)" "$(prefix)/bin/$(binname)"

@@ -50,8 +50,8 @@ func main() {
 			EnvVar: "SQUIRRELBOT_DIR",
 		},
 		cli.StringFlag{
-			Name:  "config",
-			Usage: "The location of the server config file to use",
+			Name:   "config",
+			Usage:  "The location of the server config file to use",
 			EnvVar: "SQUIRRELBOT_CONFIG_FILE",
 		},
 	}

@@ -27,7 +27,7 @@ Post-1.0
     [ ] Docker image
     [ ] Arch
     [ ] Debian
-[ ] Include video description in Kodi (requires .nfo file)
+[X] Include video description in Kodi (requires .nfo file)
 [ ] Handle videos from other websites
 [ ] ~~Detect IP address if no server name is specified?~~
 [ ] Stash links
