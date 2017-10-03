@@ -23,15 +23,18 @@ Post-1.0
 
 [X] Load configuration from a config file (or just env vars); ~~reload on SIGHUP~~
 [ ] Distro packages
-	[X] snap package
-	[ ] Docker image
-	[ ] Arch
-	[ ] Debian
+    [X] snap package
+    [ ] Docker image
+    [ ] Arch
+    [ ] Debian
+[ ] Include video description in Kodi (requires .nfo file)
 [ ] Handle videos from other websites
 [ ] ~~Detect IP address if no server name is specified?~~
 [ ] Stash links
 [ ] Support multiple output backends?
-	[ ] RSS feed or Pocket for articles
-	[ ] Kodi plugin or RSS feed for videos
+    [ ] RSS feed or Pocket for articles
+    [ ] Kodi plugin or RSS feed for videos
 [ ] Custom file transfer client for media servers/PCs?
-[ ] Authentication
+[ ] Bot server authentication
+    - Use dumb, old-fashioned password authentication.
+    - Simply store authorized users in an in-memory array.
