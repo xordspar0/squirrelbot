@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set -xe
 
 version="$1"
 

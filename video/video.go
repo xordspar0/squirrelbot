@@ -13,7 +13,7 @@ type Video struct {
 
 func NewVideo(title, description string) *Video {
 	newVideo := &Video{
-		Title: title,
+		Title:       title,
 		Description: description,
 	}
 
