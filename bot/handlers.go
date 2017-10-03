@@ -45,7 +45,7 @@ func handleYoutube(message telegram.Message, url, dir, token string) error {
 			fmt.Sprintf("I couldn't save a thumbnail for \"%s\".", newVideo.Title),
 			token,
 		)
-		return err
+		log.Println(err.Error())
 	}
 
 	// Make a .nfo file for the video.
@@ -58,7 +58,7 @@ func handleYoutube(message telegram.Message, url, dir, token string) error {
 			fmt.Sprintf("I couldn't save the metadata for \"%s\".", newVideo.Title),
 			token,
 		)
-		return err
+		log.Println(err.Error())
 	}
 
 	// Finally, send a message back to the user.
