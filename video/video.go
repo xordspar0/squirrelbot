@@ -5,7 +5,6 @@ import (
 )
 
 type Video struct {
-	Comment     string   `xml:",comment"`
 	XMLName     xml.Name `xml:"movie"`
 	Title       string   `xml:"title"`
 	Description string   `xml:"plot"`

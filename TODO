@@ -24,6 +24,7 @@ Post-1.0
 [X] Load configuration from a config file (or just env vars); ~~reload on SIGHUP~~
 [ ] Distro packages
     [X] snap package
+        [ ] Get an up to date version of youtube-dl
     [ ] Docker image
     [ ] Arch
     [ ] Debian

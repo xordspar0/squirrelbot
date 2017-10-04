@@ -26,7 +26,6 @@ func handleYoutube(message telegram.Message, url, dir, token string) error {
 		youtubedl.GetDescription(url),
 	)
 	timestamp := time.Now().Local().Format(time.RFC3339)
-	newVideo.Comment = fmt.Sprintf("Created on %s by SquirrelBot", timestamp)
 
 	// youtube-dl downloads the video and its thumbnail.
 	err = youtubedl.Download(url, dir, timestamp+" ")
@@ -51,7 +50,11 @@ func handleYoutube(message telegram.Message, url, dir, token string) error {
 
 	// Make a .nfo file for the video.
 	nfoXml, err := xml.MarshalIndent(newVideo, "", "    ")
-	nfoXml = []byte(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` + "\n" + string(nfoXml))
+	nfoXml = []byte(fmt.Sprintf("%s\n%s\n%s",
+		`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>`,
+		fmt.Sprintf("<!-- Created on %s by SquirrelBot -->", timestamp),
+		nfoXml,
+	))
 	err = ioutil.WriteFile(fmt.Sprintf("%s/%s%s.nfo", dir, timestamp+" ", newVideo.Title), nfoXml, 0644)
 	if err != nil {
 		telegram.SendMessage(
