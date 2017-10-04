@@ -7,7 +7,7 @@ system_config_file=/etc/squirrelbot/config.yaml
 .PHONY: build clean fmt install snap test uninstall
 
 build:
-	go build -ldflags "-X main.version=$(version) -X main.systemConfigFile=$(system_config_file)" -o "$(binname)" ./cmd/squirrelbot
+	go build -ldflags "-X main.version=$(version) -X main.systemConfigFile=$(system_config_file)" -o "bin/$(binname)" ./cmd/squirrelbot
 
 squirrelbot.1: doc/squirrelbot.txt
 	a2x -f manpage doc/squirrelbot.txt
@@ -22,7 +22,7 @@ test:
 	go test $(shell glide novendor)
 
 install: squirrelbot.1
-	install -Dm 755 "$(binname)" "$(prefix)/bin/$(binname)"
+	install -Dm 755 "bin/$(binname)" "$(prefix)/bin/$(binname)"
 	install -Dm 644 system/squirrelbot.service "$(systemd_unit_path)/squirrelbot.service"
 	install -Dm 644 doc/squirrelbot.1 "$(prefix)/share/man/man1/squirrelbot.1"
 
@@ -32,5 +32,5 @@ uninstall:
 	-rm -f "$(prefix)/share/man/man1/squirrelbot.1"
 
 clean:
-	-rm -f squirrelbot
+	-rm -rf bin/
 	-rm -f squirrelbot.1

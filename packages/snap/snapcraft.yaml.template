@@ -13,18 +13,16 @@ parts:
   squirrelbot:
     source: ..
     plugin: dump
-    stage-packages: [ youtube-dl ]
+    stage-packages: [ python ]
     stage:
-      - squirrelbot
       - bin/*
       - usr/*
     prime:
-      - squirrelbot
       - bin/*
       - usr/*
 
 apps:
   squirrelbot:
-    command: env SQUIRRELBOT_CONFIG_FILE="$SNAP_COMMON/config.yaml" "$SNAP/squirrelbot"
+    command: env SQUIRRELBOT_CONFIG_FILE="$SNAP_COMMON/config.yaml" "$SNAP/bin/squirrelbot"
     daemon: simple
     plugs: [ home, network, network-bind ]
