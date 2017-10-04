@@ -64,6 +64,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
+	// TODO: Make this more safe when there are missing fields.
 	if message, ok := jsonBody["message"].(map[string]interface{}); ok {
 		messageText := message["text"].(string)
 		if url := xurls.Strict.FindString(messageText); url != "" {

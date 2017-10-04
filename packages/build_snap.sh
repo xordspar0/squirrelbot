@@ -15,4 +15,5 @@ else
   sed -i "s/{{grade}}/stable/" snap/snapcraft.yaml
 fi
 
+snapcraft clean
 snapcraft
