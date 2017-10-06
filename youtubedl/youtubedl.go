@@ -2,7 +2,6 @@ package youtubedl
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os/exec"
 	"strings"
@@ -16,20 +15,32 @@ func init() {
 	}
 }
 
-// Download uses youtube-dl to download a video.
-func Download(url, directory, prefix string) error {
+// Download downloads a video.
+func Download(url string) error {
+	// Leaving the output template empty causes youtube-dl's default to be used.
+	return DownloadTo(url, "")
+}
+
+// DownloadTo downloads a video to a particular file location.
+func DownloadTo(url, fileName string) error {
 	cmd := exec.Command(
 		"youtube-dl",
 		"--output",
-		fmt.Sprintf("%s/%s%s.%s", directory, prefix, "%(title)s", "%(ext)s"),
+		fileName,
 		url,
 	)
 
 	return downloadFile(cmd)
 }
 
-// Download uses youtube-dl to download the thumbnail of a video.
-func DownloadThumbnail(url, directory, prefix string) error {
+// DownloadThumbnail downloads a video thumbnail.
+func DownloadThumbnail(url string) error {
+	// Leaving the output template empty causes youtube-dl's default to be used.
+	return DownloadThumbnailTo(url, "")
+}
+
+// DownloadThumbnailTo downloads a video thumbnail to a particular file location.
+func DownloadThumbnailTo(url, fileName string) error {
 	// Skip the download of the video itself, but download the thumbnail. Put a
 	// "-thumb" suffix on the file name because that is the format that Kodi
 	// recognizes.
@@ -38,14 +49,14 @@ func DownloadThumbnail(url, directory, prefix string) error {
 		"--skip-download",
 		"--write-thumbnail",
 		"--output",
-		fmt.Sprintf("%s/%s%s-thumb.%s", directory, prefix, "%(title)s", "%(ext)s"),
+		fileName,
 		url,
 	)
 
 	return downloadFile(cmd)
 }
 
-// GetTitle uses youtube-dl to get the name of a video.
+// GetTitle returns the name of a video.
 func GetTitle(url string) (videoTitle string) {
 	cmd := exec.Command(
 		"youtube-dl",
@@ -56,7 +67,21 @@ func GetTitle(url string) (videoTitle string) {
 	return getCmdOutput(cmd)
 }
 
-// GetDescription uses youtube-dl to get the description of a video.
+// GetTitleSafe returns the video's title, but transforms it to be safe to be used
+// as a filename.
+func GetTitleSafe(url string) string {
+	cmd := exec.Command(
+		"youtube-dl",
+		"--get-filename",
+		"--output",
+		"%(title)s",
+		url,
+	)
+
+	return getCmdOutput(cmd)
+}
+
+// GetDescription returns the description of a video.
 func GetDescription(url string) string {
 	cmd := exec.Command(
 		"youtube-dl",

@@ -3,63 +3,47 @@ package bot
 import (
 	"github.com/xordspar0/squirrelbot/telegram"
 	"github.com/xordspar0/squirrelbot/video"
-	"github.com/xordspar0/squirrelbot/youtubedl"
 
-	"encoding/xml"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"time"
 )
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
 // back to the user.
-func handleYoutube(message telegram.Message, url, dir, token string) error {
+func handleYoutube(message telegram.Message, url, directory, token string) error {
 	recipient, err := telegram.GetSenderID(message)
 	if err != nil {
 		return err
 	}
 
 	// Get the video metadata.
-	newVideo := video.NewVideo(
-		youtubedl.GetTitle(url),
-		youtubedl.GetDescription(url),
-	)
-	timestamp := time.Now().Local().Format(time.RFC3339)
+	v := video.NewVideo(url)
 
-	// youtube-dl downloads the video and its thumbnail.
-	err = youtubedl.Download(url, dir, timestamp+" ")
+	err = v.WriteVideo(directory)
 	if err != nil {
 		telegram.SendMessage(
 			recipient,
-			fmt.Sprintf("I couldn't save \"%s\".", newVideo.Title),
+			fmt.Sprintf("I couldn't save \"%s\".", v.Title),
 			token,
 		)
 		return err
 	}
 
-	err = youtubedl.DownloadThumbnail(url, dir, timestamp+" ")
+	err = v.WriteThumb(directory)
 	if err != nil {
 		telegram.SendMessage(
 			recipient,
-			fmt.Sprintf("I couldn't save a thumbnail for \"%s\".", newVideo.Title),
+			fmt.Sprintf("I couldn't save a thumbnail for \"%s\".", v.Title),
 			token,
 		)
 		log.Println(err.Error())
 	}
 
-	// Make a .nfo file for the video.
-	nfoXml, err := xml.MarshalIndent(newVideo, "", "    ")
-	nfoXml = []byte(fmt.Sprintf("%s\n%s\n%s",
-		`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>`,
-		fmt.Sprintf("<!-- Created on %s by SquirrelBot -->", timestamp),
-		nfoXml,
-	))
-	err = ioutil.WriteFile(fmt.Sprintf("%s/%s%s.nfo", dir, timestamp+" ", newVideo.Title), nfoXml, 0644)
+	err = v.WriteNfo(directory)
 	if err != nil {
 		telegram.SendMessage(
 			recipient,
-			fmt.Sprintf("I couldn't save the metadata for \"%s\".", newVideo.Title),
+			fmt.Sprintf("I couldn't save the metadata for \"%s\".", v.Title),
 			token,
 		)
 		log.Println(err.Error())
@@ -68,7 +52,7 @@ func handleYoutube(message telegram.Message, url, dir, token string) error {
 	// Finally, send a message back to the user.
 	err = telegram.SendMessage(
 		recipient,
-		fmt.Sprintf("I saved your Youtube video, \"%s\".", newVideo.Title),
+		fmt.Sprintf("I saved your Youtube video, \"%s\".", v.Title),
 		token,
 	)
 	if err != nil {
