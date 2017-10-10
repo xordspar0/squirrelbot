@@ -15,11 +15,13 @@ import (
 )
 
 type BotServer struct {
-	Address   string `yaml:"address"`
-	Port      string `yaml:"port"`
-	Token     string `yaml:"token"`
-	Directory string `yaml:"directory"`
-	Endpoint  string
+	Address         string `yaml:"address"`
+	Port            string `yaml:"port"`
+	Token           string `yaml:"token"`
+	Directory       string `yaml:"directory"`
+	Endpoint        string
+	pocketKey       string `yaml:"pocket_key"`
+	pocketUserToken string `yaml:"pocket_user_token"`
 }
 
 func (b *BotServer) LoadConfigFromFile(fileName string) error {
@@ -83,7 +85,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 					log.Printf(err.Error())
 				}
 			} else {
-				err := handleLink(message, url, b.Token)
+				err := handleLink(message, url, b.Token, b.pocketKey, b.pocketUserToken)
 				if err != nil {
 					log.Printf(err.Error())
 				}
