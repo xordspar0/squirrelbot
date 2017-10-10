@@ -11,9 +11,9 @@ import (
 
 type Video struct {
 	XMLName      xml.Name `xml:"movie"`
+	Url          string   `xml:"-"`
 	Title        string   `xml:"title"`
 	Description  string   `xml:"plot"`
-	url          string
 	downloadDate string
 	fileName     string
 }
@@ -21,7 +21,7 @@ type Video struct {
 func NewVideo(url string) *Video {
 	currentTime := time.Now().Local().Format(time.RFC3339)
 	v := &Video{
-		url:          url,
+		Url:          url,
 		Title:        youtubedl.GetTitle(url),
 		Description:  youtubedl.GetDescription(url),
 		downloadDate: currentTime,
@@ -37,7 +37,7 @@ func NewVideo(url string) *Video {
 
 func (v *Video) WriteVideo(directory string) error {
 	return youtubedl.DownloadTo(
-		v.url,
+		v.Url,
 		fmt.Sprintf("%s/%s.%s", directory, v.fileName, "%(ext)s"),
 	)
 }
@@ -45,7 +45,7 @@ func (v *Video) WriteVideo(directory string) error {
 // WriteNfo saves a thumbnail file for the video.
 func (v *Video) WriteThumb(directory string) error {
 	return youtubedl.DownloadThumbnailTo(
-		v.url,
+		v.Url,
 		fmt.Sprintf("%s/%s-thumb.%s", directory, v.fileName, "%(ext)s"),
 	)
 }
