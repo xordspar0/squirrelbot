@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -45,7 +44,7 @@ func (c *PocketClient) Add(url string) (title string, err error) {
 	}
 
 	if response.StatusCode != 200 {
-		return "", errors.New(fmt.Sprintf("Pocket returned %s: %s", response.Status, responseBody))
+		return "", errors.New("Pocket returned " + string(responseBody))
 	}
 
 	responseMap := make(map[string]interface{})
@@ -54,7 +53,9 @@ func (c *PocketClient) Add(url string) (title string, err error) {
 		return "", err
 	}
 
-	title = responseMap["title"].(string)
+	if _, ok := responseMap["item"]; ok {
+		title, _ = responseMap["item"].(map[string]interface{})["title"].(string)
+	}
 
 	return title, nil
 }

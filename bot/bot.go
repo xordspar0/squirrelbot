@@ -20,8 +20,8 @@ type BotServer struct {
 	Token           string `yaml:"token"`
 	Directory       string `yaml:"directory"`
 	Endpoint        string
-	pocketKey       string `yaml:"pocket_key"`
-	pocketUserToken string `yaml:"pocket_user_token"`
+	PocketKey       string `yaml:"pocket_key"`
+	PocketUserToken string `yaml:"pocket_user_token"`
 }
 
 func (b *BotServer) LoadConfigFromFile(fileName string) error {
@@ -85,7 +85,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 					log.Printf(err.Error())
 				}
 			} else {
-				err := handleLink(message, url, b.Token, b.pocketKey, b.pocketUserToken)
+				err := handleLink(message, url, b.Token, b.PocketKey, b.PocketUserToken)
 				if err != nil {
 					log.Printf(err.Error())
 				}
