@@ -73,7 +73,11 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 				strings.HasPrefix(url, "http://m.youtube.com") ||
 				strings.HasPrefix(url, "https://m.youtube.com") ||
 				strings.HasPrefix(url, "http://youtu.be") ||
-				strings.HasPrefix(url, "https://youtu.be") {
+				strings.HasPrefix(url, "https://youtu.be") ||
+				strings.HasPrefix(url, "http://vimeo.com") ||
+				strings.HasPrefix(url, "https://vimeo.com") ||
+				strings.HasPrefix(url, "http://player.vimeo.com") ||
+				strings.HasPrefix(url, "https://player.vimeo.com") {
 				err := handleYoutube(message, url, b.Directory, b.Token)
 				if err != nil {
 					log.Printf(err.Error())
