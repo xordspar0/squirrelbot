@@ -9,7 +9,21 @@ import (
 	"net/http"
 )
 
-type Message map[string]interface{}
+type update struct {
+	ID      int     `json:"update_id"`
+	Message Message
+}
+
+type Message struct {
+	ID   int `json:"message_id"`
+	Text string
+	From struct {
+		ID int
+	}
+	Chat struct {
+		ID int
+	}
+}
 
 // SetWebhook establishes a connection with the Telegram server and tells
 // Telegram where to send updates and messages.
@@ -40,10 +54,10 @@ func SetWebhook(address, token string) error {
 	return nil
 }
 
-func SendMessage(recipient, messageBody, token string) error {
+func SendMessage(recipient int, messageBody, token string) error {
 	// Form request JSON.
 	reqMap := make(map[string]string)
-	reqMap["chat_id"] = recipient
+	reqMap["chat_id"] = string(recipient)
 	reqMap["text"] = messageBody
 	reqJson, err := json.Marshal(reqMap)
 	if err != nil {
@@ -68,18 +82,14 @@ func SendMessage(recipient, messageBody, token string) error {
 	return nil
 }
 
-// GetSenderID returns the ID that can be used to reach the sender of a given
-// message.
-func GetSenderID(message Message) (string, error) {
-	var id int
-
-	if _, ok := message["from"]; ok {
-		id = int(message["from"].(map[string]interface{})["id"].(float64))
-	} else if _, ok := message["chat"]; ok {
-		id = int(message["chat"].(map[string]interface{})["id"].(float64))
-	} else {
-		return "", errors.New("Error: message has no sender")
+// GetMessage accepts json as a byte array and returns a message object if the
+// json contains one.
+func GetMessage(raw []byte) (Message, error) {
+	var update update
+	err := json.Unmarshal(raw, &update)
+	if err != nil {
+		return Message{}, errors.New("Error parsing message: " + err.Error())
 	}
 
-	return fmt.Sprintf("%d", id), nil
+	return update.Message, nil
 }
