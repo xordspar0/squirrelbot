@@ -14,8 +14,8 @@ toolchain](https://golang.org/doc/install) to build the bot.
 
 ### Dependencies
 
-Dependencies are managed by [Glide](http://glide.sh/), so install Glide and then
-run `glide install`.
+Dependencies are managed by [Go dep](https://github.com/golang/dep), so install
+dep and then run `dep ensure`.
 
 [youtube-dl](https://rg3.github.io/youtube-dl/) is a runtime dependency. You
 should be able to install it through your system package manager.

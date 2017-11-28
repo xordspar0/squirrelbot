@@ -19,7 +19,7 @@ fmt:
 	gofmt -s -l -w $(shell find . -name '*.go' -not -path '*vendor*')
 
 test:
-	go test $(shell glide novendor)
+	go test ./...
 
 install: squirrelbot.1
 	install -Dm 755 "bin/$(binname)" "$(prefix)/bin/$(binname)"
