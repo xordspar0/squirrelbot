@@ -54,6 +54,11 @@ func main() {
 			Usage:  "The location of the server config file to use",
 			EnvVar: "SQUIRRELBOT_CONFIG_FILE",
 		},
+		cli.StringFlag{
+			Name:   "motd, m",
+			Usage:  "A message of the day to send to new users",
+			EnvVar: "SQUIRRELBOT_MOTD",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -98,6 +103,9 @@ func run(c *cli.Context) error {
 	}
 	if directory := c.String("dir"); directory != "" {
 		squirrelbotServer.Directory = directory
+	}
+	if motd := c.String("motd"); motd != "" {
+		squirrelbotServer.Motd = motd
 	}
 
 	squirrelbotServer.Endpoint = fmt.Sprintf("/%s_%x/", botname, randomSecret)

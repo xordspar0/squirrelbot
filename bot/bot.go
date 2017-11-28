@@ -19,6 +19,7 @@ type BotServer struct {
 	Port      string `yaml:"port"`
 	Token     string `yaml:"token"`
 	Directory string `yaml:"directory"`
+	Motd      string `yaml:"motd"`
 	Endpoint  string
 }
 
@@ -67,29 +68,50 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 	// TODO: Make this more safe when there are missing fields.
 	if message, ok := jsonBody["message"].(map[string]interface{}); ok {
 		messageText := message["text"].(string)
-		if url := xurls.Strict.FindString(messageText); url != "" {
-			if strings.HasPrefix(url, "http://www.youtube.com") ||
-				strings.HasPrefix(url, "https://www.youtube.com") ||
-				strings.HasPrefix(url, "http://m.youtube.com") ||
-				strings.HasPrefix(url, "https://m.youtube.com") ||
-				strings.HasPrefix(url, "http://youtu.be") ||
-				strings.HasPrefix(url, "https://youtu.be") ||
-				strings.HasPrefix(url, "http://vimeo.com") ||
-				strings.HasPrefix(url, "https://vimeo.com") ||
-				strings.HasPrefix(url, "http://player.vimeo.com") ||
-				strings.HasPrefix(url, "https://player.vimeo.com") {
-				err := handleYoutube(message, url, b.Directory, b.Token)
+		recipient, err := telegram.GetSenderID(message)
+		if err != nil {
+			log.Printf(err.Error())
+		}
+
+		if messageText != "" && recipient != "" {
+			if messageText == "/start" {
+				err = b.SendMotd(recipient)
 				if err != nil {
 					log.Printf(err.Error())
 				}
-			} else {
-				err := handleLink(message, url, b.Token)
-				if err != nil {
-					log.Printf(err.Error())
+
+			} else if url := xurls.Strict.FindString(messageText); url != "" {
+				if strings.HasPrefix(url, "http://www.youtube.com") ||
+					strings.HasPrefix(url, "https://www.youtube.com") ||
+					strings.HasPrefix(url, "http://m.youtube.com") ||
+					strings.HasPrefix(url, "https://m.youtube.com") ||
+					strings.HasPrefix(url, "http://youtu.be") ||
+					strings.HasPrefix(url, "https://youtu.be") ||
+					strings.HasPrefix(url, "http://vimeo.com") ||
+					strings.HasPrefix(url, "https://vimeo.com") ||
+					strings.HasPrefix(url, "http://player.vimeo.com") ||
+					strings.HasPrefix(url, "https://player.vimeo.com") {
+					err = handleYoutube(url, b.Directory, recipient, b.Token)
+					if err != nil {
+						log.Printf(err.Error())
+					}
+				} else {
+					err = handleLink(url, recipient, b.Token)
+					if err != nil {
+						log.Printf(err.Error())
+					}
 				}
 			}
 		}
 	} else {
 		log.Printf("Update %d has no message", jsonBody["update_id"])
 	}
+}
+
+func (b *BotServer) SendMotd(recipient string) error {
+	return telegram.SendMessage(
+		recipient,
+		b.Motd,
+		b.Token,
+	)
 }

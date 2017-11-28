@@ -29,7 +29,7 @@ Post-1.0
     [ ] Debian
 [X] Include video description in Kodi (requires .nfo file)
 [ ] Handle videos from other websites
-[ ] ~~Detect IP address if no server name is specified?~~
+[ ] Detect IP address if no server name is specified?
 [ ] Stash links
 [ ] toGoogle
     - Start a message with `/search`.
