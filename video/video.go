@@ -14,18 +14,18 @@ type Video struct {
 	Url          string   `xml:"-"`
 	Title        string   `xml:"title"`
 	Description  string   `xml:"plot"`
-	downloadDate string
+	downloadDate time.Time
 	fileName     string
 }
 
 func NewVideo(url string) *Video {
-	currentTime := time.Now().Local().Format(time.RFC3339)
+	currentTime := time.Now().Local()
 	v := &Video{
 		Url:          url,
 		Title:        youtubedl.GetTitle(url),
 		Description:  youtubedl.GetDescription(url),
 		downloadDate: currentTime,
-		fileName:     fmt.Sprintf("%s %s", currentTime, youtubedl.GetTitleSafe(url)),
+		fileName:     fmt.Sprintf("%s %s", currentTime.Format(time.RFC3339), youtubedl.GetTitleSafe(url)),
 	}
 
 	if v.Title == "" {
@@ -60,7 +60,7 @@ func (v *Video) WriteNfo(directory string) error {
 
 	nfoXml = []byte(fmt.Sprintf("%s\n%s\n%s",
 		`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>`,
-		fmt.Sprintf("<!-- Created on %s by SquirrelBot -->", v.downloadDate),
+		fmt.Sprintf("<!-- Created on %s by SquirrelBot -->", v.downloadDate.Format(time.RFC3339)),
 		nfoXml,
 	))
 	err = ioutil.WriteFile(fmt.Sprintf("%s/%s.nfo", directory, v.fileName), nfoXml, 0644)

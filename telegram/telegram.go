@@ -16,13 +16,14 @@ type update struct {
 
 type Message struct {
 	ID   int `json:"message_id"`
-	Text string
-	From struct {
-		ID int
-	}
 	Chat struct {
 		ID int
 	}
+	Date int64
+	From struct {
+		ID int
+	}
+	Text string
 }
 
 // SetWebhook establishes a connection with the Telegram server and tells
