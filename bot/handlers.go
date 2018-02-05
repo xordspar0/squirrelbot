@@ -11,7 +11,7 @@ import (
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
 // back to the user.
-func handleYoutube(url, directory string, recipient int, token string) {
+func handleYoutube(url, directory string, recipient int, token string) error {
 	// Get the video metadata.
 	v := video.NewVideo(url)
 
@@ -23,7 +23,7 @@ func handleYoutube(url, directory string, recipient int, token string) {
 			token,
 		)
 		log.Error(err.Error())
-		return
+		return err
 	}
 
 	err = v.WriteThumb(directory)
@@ -54,12 +54,13 @@ func handleYoutube(url, directory string, recipient int, token string) {
 	)
 	if err != nil {
 		log.Error(err.Error())
+		return err
 	}
 
-	return
+	return nil
 }
 
-func handleLink(url string, recipient int, token string) {
+func handleLink(url string, recipient int, token string) error {
 	err := telegram.SendMessage(
 		recipient,
 		"This link does not look like a video. Stashing ordinary links is not yet implemented.",
@@ -67,6 +68,7 @@ func handleLink(url string, recipient int, token string) {
 	)
 	if err != nil {
 		log.Error(err.Error())
+		return err
 	}
-	return
+	return nil
 }
