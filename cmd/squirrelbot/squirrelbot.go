@@ -3,12 +3,12 @@ package main
 import (
 	"github.com/xordspar0/squirrelbot/bot"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 
 	"crypto/rand"
 	"errors"
 	"fmt"
-	"log"
 	"math/big"
 	"os"
 )
@@ -17,6 +17,12 @@ var botname = "squirrelbot"
 var version = "devel"
 var systemConfigFile = ""
 var app *cli.App
+
+func init() {
+	log.SetLevel(log.InfoLevel)
+	log.SetFormatter(&log.TextFormatter{})
+	log.SetOutput(os.Stdout)
+}
 
 func main() {
 	app := cli.NewApp()
@@ -82,12 +88,11 @@ func run(c *cli.Context) error {
 	// Load config from a file first.
 	if fileName := c.String("config"); fileName != "" {
 		if err := squirrelbotServer.LoadConfigFromFile(fileName); err != nil {
-			log.Println("Error: Could not load config file:", err.Error)
-			return err
+			return errors.New("Could not load config file: " + err.Error())
 		}
 	} else if systemConfigFile != "" {
 		if err := squirrelbotServer.LoadConfigFromFile(systemConfigFile); err != nil {
-			log.Println("Warning: Could not load system config file:", err.Error)
+			log.Printf("Could not load system config file %s", err.Error())
 		}
 	}
 

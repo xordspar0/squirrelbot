@@ -4,13 +4,14 @@ import (
 	"github.com/xordspar0/squirrelbot/telegram"
 	"github.com/xordspar0/squirrelbot/video"
 
+	log "github.com/sirupsen/logrus"
+
 	"fmt"
-	"log"
 )
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
 // back to the user.
-func handleYoutube(url, directory string, recipient int, token string) error {
+func handleYoutube(url, directory string, recipient int, token string) {
 	// Get the video metadata.
 	v := video.NewVideo(url)
 
@@ -21,7 +22,8 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 			fmt.Sprintf("I couldn't save \"%s\".", v.Title),
 			token,
 		)
-		return err
+		log.Error(err.Error())
+		return
 	}
 
 	err = v.WriteThumb(directory)
@@ -31,7 +33,7 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 			fmt.Sprintf("I couldn't save a thumbnail for \"%s\".", v.Title),
 			token,
 		)
-		log.Println(err.Error())
+		log.Error(err.Error())
 	}
 
 	err = v.WriteNfo(directory)
@@ -41,7 +43,7 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 			fmt.Sprintf("I couldn't save the metadata for \"%s\".", v.Title),
 			token,
 		)
-		log.Println(err.Error())
+		log.Error(err.Error())
 	}
 
 	// Finally, send a message back to the user.
@@ -51,16 +53,20 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 		token,
 	)
 	if err != nil {
-		return err
+		log.Error(err.Error())
 	}
 
-	return nil
+	return
 }
 
-func handleLink(url string, recipient int, token string) error {
-	return telegram.SendMessage(
+func handleLink(url string, recipient int, token string) {
+	err := telegram.SendMessage(
 		recipient,
 		"This link does not look like a video. Stashing ordinary links is not yet implemented.",
 		token,
 	)
+	if err != nil {
+		log.Error(err.Error())
+	}
+	return
 }

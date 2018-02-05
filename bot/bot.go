@@ -3,11 +3,11 @@ package bot
 import (
 	"github.com/xordspar0/squirrelbot/telegram"
 
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	"mvdan.cc/xurls"
 
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -42,7 +42,9 @@ func (b *BotServer) LoadConfigFromFile(fileName string) error {
 }
 
 func (b *BotServer) Start() error {
-	log.Println("Setting up endpoint at " + b.Address + b.Endpoint)
+	log.WithFields(log.Fields{
+		"url": b.Address + b.Endpoint,
+	}).Info("Setting up endpoint at " + b.Address + b.Endpoint)
 	http.HandleFunc(b.Endpoint, b.botListener)
 	err := telegram.SetWebhook(b.Address+b.Endpoint, b.Token)
 	if err != nil {
@@ -61,7 +63,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 	message, err := telegram.GetMessage(rawBody)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println(err.Error())
+		log.Error(err.Error())
 	}
 
 	var recipient int
@@ -71,11 +73,15 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		recipient = message.Chat.ID
 	}
 
-	if message.Text != "" && recipient != 0 {
+	if message.Text == "" {
+		log.Error("Message has no body")
+	} else if recipient == 0 {
+		log.Error("Message has no sender")
+	} else {
 		if message.Text == "/start" {
 			err = b.SendMotd(recipient)
 			if err != nil {
-				log.Printf(err.Error())
+				log.Error(err.Error())
 			}
 
 		} else if url := xurls.Strict.FindString(message.Text); url != "" {
@@ -89,19 +95,11 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 				strings.HasPrefix(url, "https://vimeo.com") ||
 				strings.HasPrefix(url, "http://player.vimeo.com") ||
 				strings.HasPrefix(url, "https://player.vimeo.com") {
-				err = handleYoutube(url, b.Directory, recipient, b.Token)
-				if err != nil {
-					log.Printf(err.Error())
-				}
+				handleYoutube(url, b.Directory, recipient, b.Token)
 			} else {
-				err = handleLink(url, recipient, b.Token)
-				if err != nil {
-					log.Printf(err.Error())
-				}
+				handleLink(url, recipient, b.Token)
 			}
 		}
-	} else {
-		log.Printf("Update %d has no message")
 	}
 }
 
