@@ -1,44 +1,23 @@
-SquirrelBot
-===========
-
-1.0 Goals
----------
-
-[X] Ping Telegram servers to turn on webhook
-[X] Receive messages
-[X] Find links in messages
-[ ] ~~(maybe) Ask user for confirmation (say whether we detected an article or video) (use buttons)~~
-[X] Recognize videos that youtube-dl can download
-[X] Acknowledge that the link has been processed
-[X] Download videos on my server
-[X] Order videos by when they were added (just put a timestamp in the file name)
-[X] Allow a command-line arg for specifying the download directory
-[X] Generate thumbnail files
-[ ] ~~Generate .nfo files~~
-[X] Write a Makefile for packagers
-[X] Write a man page
-
-Post-1.0
---------
-
-[X] Load configuration from a config file (or just env vars); ~~reload on SIGHUP~~
-[ ] Distro packages
-    [X] snap package
-    [ ] Docker image
-    [ ] Arch
-    [ ] Debian
-[X] Include video description in Kodi (requires .nfo file)
-[ ] Handle videos from other websites
-[ ] Detect IP address if no server name is specified?
-[ ] Stash links
-[ ] toGoogle
-    - Start a message with `/search`.
-    - Squirrelbot will respond with "Let me {Google} that for you."
-    - Squirrelbot will stash the search results as a Web page.
-[ ] Support multiple output backends?
-    [ ] RSS feed or Pocket for articles
-    [ ] Kodi plugin or RSS feed for videos
-[ ] Custom file transfer client for media servers/PCs?
-[ ] Bot server authentication
-    - Use dumb, old-fashioned password authentication.
-    - Simply store authorized users in an in-memory array.
+- [ ] More useful logging
+      - [ ] Something like Apache's access.log
+      - [ ] Multiple log levels
+- [ ] Reload config on SIGHUP?
+- [ ] Distro packages
+      - [X] snap package
+      - [ ] Docker image
+      - [ ] Arch
+      - [ ] Debian
+- [ ] Handle videos from other websites
+- [ ] Detect IP address if no server name is specified?
+- [ ] Stash links
+- [ ] toGoogle
+      - Start a message with `/search`.
+      - Squirrelbot will respond with "Let me {Google} that for you."
+      - Squirrelbot will stash the search results as a Web page.
+- [ ] Support multiple output backends?
+      - [ ] RSS feed or Pocket for articles
+      - [ ] Kodi plugin or RSS feed for videos
+- [ ] Custom file transfer client for media servers/PCs?
+- [ ] Bot server authentication
+      - Use dumb, old-fashioned password authentication (a la Quake, Minecraft, etc.).
+      - Simply store authorized users in an in-memory array.
