@@ -6,7 +6,7 @@ vendor
 
 # Build files
 bin/
-squirrelbot
+./squirrelbot
 *.1
 *.snap
 packages/snap/snapcraft.yaml
