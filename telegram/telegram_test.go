@@ -9,10 +9,8 @@ func TestGetMessage(t *testing.T) {
 			"message_id": 2,
 			"text": "abc",
 			"from": {
-				"id": 3
-			},
-			"chat": {
-				"id": 4
+				"id": 3,
+				"username": "name"
 			}
 		}
 	}`)
@@ -22,17 +20,17 @@ func TestGetMessage(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	noMatch := "Field %s does not match: %#v should be %#v"
+	errNoMatch := "Field %s does not match: %#v should be %#v"
 	if message.ID != 2 {
-		t.Errorf(noMatch, "ID", message.ID, 2)
+		t.Errorf(errNoMatch, "ID", message.ID, 2)
 	}
 	if message.Text != "abc" {
-		t.Errorf(noMatch, "Text", message.Text, "abc")
+		t.Errorf(errNoMatch, "Text", message.Text, "abc")
 	}
 	if message.From.ID != 3 {
-		t.Errorf(noMatch, "From.ID", message.From.ID, 3)
+		t.Errorf(errNoMatch, "From.ID", message.From.ID, 3)
 	}
-	if message.Chat.ID != 4 {
-		t.Errorf(noMatch, "Chat.ID", message.Chat.ID, 4)
+	if message.From.Username != "name" {
+		t.Errorf(errNoMatch, "From.Username", message.From.Username, "name")
 	}
 }

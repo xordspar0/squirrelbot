@@ -66,20 +66,13 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 	}
 
-	var recipient int
-	if message.From.ID != 0 {
-		recipient = message.From.ID
-	} else if message.Chat.ID != 0 {
-		recipient = message.Chat.ID
-	}
-
 	if message.Text == "" {
 		log.Error("Message has no body")
-	} else if recipient == 0 {
+	} else if message.From.ID == 0 {
 		log.Error("Message has no sender")
 	} else {
 		if message.Text == "/start" {
-			err = b.SendMotd(recipient)
+			err = b.SendMotd(message.From.ID)
 			if err != nil {
 				log.Error(err.Error())
 			}
@@ -95,9 +88,17 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 				strings.HasPrefix(url, "https://vimeo.com") ||
 				strings.HasPrefix(url, "http://player.vimeo.com") ||
 				strings.HasPrefix(url, "https://player.vimeo.com") {
-				handleYoutube(url, b.Directory, recipient, b.Token)
+				log.WithFields(log.Fields{
+					"url": url,
+					"user": message.From.Username,
+				}).Info("Stashing video")
+				handleYoutube(url, b.Directory, message.From.ID, b.Token)
 			} else {
-				handleLink(url, recipient, b.Token)
+				log.WithFields(log.Fields{
+					"url": url,
+					"user": message.From.Username,
+				}).Info("Stashing link")
+				handleLink(url, message.From.ID, b.Token)
 			}
 		}
 	}

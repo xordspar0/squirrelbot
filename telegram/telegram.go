@@ -16,12 +16,10 @@ type update struct {
 
 type Message struct {
 	ID   int `json:"message_id"`
-	Chat struct {
-		ID int
-	}
 	Date int64
 	From struct {
-		ID int
+		ID       int
+		Username string
 	}
 	Text string
 }
