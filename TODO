@@ -1,9 +1,9 @@
-- [ ] More useful logging
-      - [ ] Something like Apache's access.log
-      - [ ] Multiple log levels
+- [x] More useful logging
+      - [x] Something like Apache's access.log
+      - [x] Multiple log levels
 - [ ] Reload config on SIGHUP?
 - [ ] Distro packages
-      - [X] snap package
+      - [x] snap package
       - [ ] Docker image
       - [ ] Arch
       - [ ] Debian
