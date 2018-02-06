@@ -14,12 +14,14 @@ import (
 )
 
 type BotServer struct {
-	Address   string `yaml:"address"`
-	Port      string `yaml:"port"`
-	Token     string `yaml:"token"`
-	Directory string `yaml:"directory"`
-	Motd      string `yaml:"motd"`
-	Endpoint  string
+	Address         string `yaml:"address"`
+	Port            string `yaml:"port"`
+	Token           string `yaml:"token"`
+	Directory       string `yaml:"directory"`
+	Motd            string `yaml:"motd"`
+	Endpoint        string
+	PocketKey       string `yaml:"pocket_key"`
+	PocketUserToken string `yaml:"pocket_user_token"`
 }
 
 func (b *BotServer) LoadConfigFromFile(fileName string) error {
@@ -98,7 +100,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 					"url": url,
 					"user": message.From.Username,
 				}).Info("Stashing link")
-				handleLink(url, message.From.ID, b.Token)
+				handleLink(message, url, message.From.ID, b.Token, b.PocketKey, b.PocketUserToken)
 			}
 		}
 	}

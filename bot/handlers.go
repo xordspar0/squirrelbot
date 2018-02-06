@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"github.com/xordspar0/squirrelbot/article"
 	"github.com/xordspar0/squirrelbot/telegram"
 	"github.com/xordspar0/squirrelbot/video"
 
@@ -15,13 +16,23 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 	// Get the video metadata.
 	v := video.NewVideo(url)
 
+	var videoTitle string
+	if v.Title != "" {
+		videoTitle = v.Title
+	} else {
+		videoTitle = "that video"
+	}
+
 	err := v.WriteVideo(directory)
 	if err != nil {
-		telegram.SendMessage(
-			recipient,
-			fmt.Sprintf("I couldn't save \"%s\".", v.Title),
-			token,
-		)
+		var message string
+		if v.Title != "" {
+			message = fmt.Sprintf("I couldn't save your video, \"%s\".", v.Title)
+		} else {
+			message = "I couldn't save that video."
+		}
+
+		telegram.SendMessage(recipient, message, token)
 		log.Error(err.Error())
 		return err
 	}
@@ -30,7 +41,7 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 	if err != nil {
 		telegram.SendMessage(
 			recipient,
-			fmt.Sprintf("I couldn't save a thumbnail for \"%s\".", v.Title),
+			fmt.Sprintf("I couldn't save a thumbnail for \"%s\".", videoTitle),
 			token,
 		)
 		log.Error(err.Error())
@@ -40,16 +51,16 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 	if err != nil {
 		telegram.SendMessage(
 			recipient,
-			fmt.Sprintf("I couldn't save the metadata for \"%s\".", v.Title),
+			fmt.Sprintf("I couldn't save the metadata for \"%s\".", videoTitle),
 			token,
 		)
 		log.Error(err.Error())
 	}
 
-	// Finally, send a message back to the user.
+	// Finally, report a successful save to the user.
 	err = telegram.SendMessage(
 		recipient,
-		fmt.Sprintf("I saved your Youtube video, \"%s\".", v.Title),
+		fmt.Sprintf("I saved your Youtube video, \"%s\".", videoTitle),
 		token,
 	)
 	if err != nil {
@@ -60,10 +71,27 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 	return nil
 }
 
-func handleLink(url string, recipient int, token string) error {
-	err := telegram.SendMessage(
+func handleLink(message telegram.Message, url string, recipient int, token, pocketKey, pocketUserToken string) error {
+	a := article.NewArticle(url)
+
+	err := a.Save(pocketKey, pocketUserToken)
+	if err != nil {
+		var message string
+		if a.Title != "" {
+			message = fmt.Sprintf("I couldn't save your article, \"%s\".", a.Title)
+		} else {
+			message = "I couldn't save that article."
+		}
+
+		telegram.SendMessage(recipient, message, token)
+		log.Error(err.Error())
+		return err
+	}
+
+	// Finally, report a successful save to the user.
+	err = telegram.SendMessage(
 		recipient,
-		"This link does not look like a video. Stashing ordinary links is not yet implemented.",
+		fmt.Sprintf("I saved your article, \"%s\".", a.Title),
 		token,
 	)
 	if err != nil {

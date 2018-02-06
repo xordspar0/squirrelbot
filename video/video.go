@@ -28,10 +28,6 @@ func NewVideo(url string) *Video {
 		fileName:     fmt.Sprintf("%s %s", currentTime.Format(time.RFC3339), youtubedl.GetTitleSafe(url)),
 	}
 
-	if v.Title == "" {
-		v.Title = "that video"
-	}
-
 	return v
 }
 
