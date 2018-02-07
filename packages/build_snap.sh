@@ -3,10 +3,6 @@ set -xe
 
 version="$1"
 
-# Download youtube-dl.
-curl -L https://yt-dl.org/downloads/latest/youtube-dl -o bin/youtube-dl
-chmod a+rx bin/youtube-dl
-
 # Prepare snapcraft.yaml.
 cd $(dirname $0)
 cp snap/snapcraft.yaml.template snap/snapcraft.yaml
