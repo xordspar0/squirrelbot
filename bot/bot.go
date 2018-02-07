@@ -46,7 +46,7 @@ func (b *BotServer) LoadConfigFromFile(fileName string) error {
 func (b *BotServer) Start() error {
 	log.WithFields(log.Fields{
 		"url": b.Address + b.Endpoint,
-	}).Info("Setting up endpoint at " + b.Address + b.Endpoint)
+	}).Info("Setting up endpoint.")
 	http.HandleFunc(b.Endpoint, b.botListener)
 	err := telegram.SetWebhook(b.Address+b.Endpoint, b.Token)
 	if err != nil {
@@ -70,11 +70,11 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 
 	if message.Text == "" {
 		log.Error("Message has no body")
-	} else if message.From.ID == 0 {
+	} else if message.Chat.ID == 0 {
 		log.Error("Message has no sender")
 	} else {
 		if message.Text == "/start" {
-			err = b.SendMotd(message.From.ID)
+			err = b.SendMotd(message.Chat.ID)
 			if err != nil {
 				log.Error(err.Error())
 			}
@@ -94,13 +94,13 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 					"url": url,
 					"user": message.From.Username,
 				}).Info("Stashing video")
-				handleYoutube(url, b.Directory, message.From.ID, b.Token)
+				handleYoutube(url, b.Directory, message.Chat.ID, b.Token)
 			} else {
 				log.WithFields(log.Fields{
 					"url": url,
-					"user": message.From.Username,
+					"user": message.Chat.Username,
 				}).Info("Stashing link")
-				handleLink(message, url, message.From.ID, b.Token, b.PocketKey, b.PocketUserToken)
+				handleLink(message, url, message.Chat.ID, b.Token, b.PocketKey, b.PocketUserToken)
 			}
 		}
 	}
