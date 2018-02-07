@@ -7,6 +7,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"mvdan.cc/xurls"
 
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -46,7 +47,7 @@ func (b *BotServer) LoadConfigFromFile(fileName string) error {
 func (b *BotServer) Start() error {
 	log.WithFields(log.Fields{
 		"url": b.Address + b.Endpoint,
-	}).Info("Setting up endpoint.")
+	}).Info("Setting up endpoint")
 	http.HandleFunc(b.Endpoint, b.botListener)
 	err := telegram.SetWebhook(b.Address+b.Endpoint, b.Token)
 	if err != nil {
@@ -68,6 +69,16 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 	}
 
+	var username string
+	if message.From.Username != "" {
+		username = message.From.Username
+	} else if message.From.FirstName != "" || message.From.LastName != "" {
+		username = strings.TrimSpace(fmt.Sprintf("%s %s",
+			message.From.FirstName,
+			message.From.LastName,
+		))
+	}
+
 	if message.Text == "" {
 		log.Error("Message has no body")
 	} else if message.Chat.ID == 0 {
@@ -78,7 +89,6 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Error(err.Error())
 			}
-
 		} else if url := xurls.Strict.FindString(message.Text); url != "" {
 			if strings.HasPrefix(url, "http://www.youtube.com") ||
 				strings.HasPrefix(url, "https://www.youtube.com") ||
@@ -91,14 +101,14 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 				strings.HasPrefix(url, "http://player.vimeo.com") ||
 				strings.HasPrefix(url, "https://player.vimeo.com") {
 				log.WithFields(log.Fields{
-					"url": url,
-					"user": message.From.Username,
+					"url":  url,
+					"user": username,
 				}).Info("Stashing video")
 				handleYoutube(url, b.Directory, message.Chat.ID, b.Token)
 			} else {
 				log.WithFields(log.Fields{
-					"url": url,
-					"user": message.Chat.Username,
+					"url":  url,
+					"user": username,
 				}).Info("Stashing link")
 				handleLink(message, url, message.Chat.ID, b.Token, b.PocketKey, b.PocketUserToken)
 			}

@@ -10,11 +10,12 @@ func TestGetMessage(t *testing.T) {
 			"message_id": 2,
 			"text": "abc",
 			"chat": {
-				"id": 3,
-				"username": "chat"
+				"id": 3
 			},
 			"from": {
 				"id": 4,
+				"first_name": "John",
+				"last_name": "Doe",
 				"username": "name"
 			}
 		}
@@ -36,11 +37,14 @@ func TestGetMessage(t *testing.T) {
 	if message.Chat.ID != 3 {
 		t.Errorf(errNoMatch, "Chat.ID", message.Chat.ID, 3)
 	}
-	if message.Chat.Username != "chat" {
-		t.Errorf(errNoMatch, "Chat.Username", message.Chat.Username, "chat")
-	}
 	if message.From.ID != 4 {
 		t.Errorf(errNoMatch, "From.ID", message.From.ID, 4)
+	}
+	if message.From.FirstName != "John" {
+		t.Errorf(errNoMatch, "From.FirstName", message.From.FirstName, "John")
+	}
+	if message.From.LastName != "Doe" {
+		t.Errorf(errNoMatch, "From.Username", message.From.LastName, "Doe")
 	}
 	if message.From.Username != "name" {
 		t.Errorf(errNoMatch, "From.Username", message.From.Username, "name")

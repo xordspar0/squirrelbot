@@ -19,11 +19,12 @@ type Message struct {
 	Date int64
 	Chat struct {
 		ID int
-		Username string
 	}
 	From struct {
-		ID       int
-		Username string
+		ID        int
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
+		Username  string
 	}
 	Text string
 }
