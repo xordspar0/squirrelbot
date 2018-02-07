@@ -20,7 +20,7 @@ parts:
   youtube-dl:
     plugin: dump
     prepare: |
-      curl -L https://yt-dl.org/downloads/latest/youtube-dl -O
+      curl --silent -L https://yt-dl.org/downloads/latest/youtube-dl -O
       chmod a+rx youtube-dl
     organize:
       youtube-dl: bin/youtube-dl
