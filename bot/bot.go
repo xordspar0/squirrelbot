@@ -61,6 +61,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 	rawBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		log.Error(err.Error())
 	}
 
 	message, err := telegram.GetMessage(rawBody)
