@@ -60,8 +60,8 @@ func SetWebhook(address, token string) error {
 
 func SendMessage(recipient int, messageBody, token string) error {
 	// Form request JSON.
-	reqMap := make(map[string]string)
-	reqMap["chat_id"] = string(recipient)
+	reqMap := make(map[string]interface{})
+	reqMap["chat_id"] = recipient
 	reqMap["text"] = messageBody
 	reqJson, err := json.Marshal(reqMap)
 	if err != nil {
