@@ -26,22 +26,23 @@ To build squirrelbot, simply run `make` in the root directory. To install
 squirrelbot, run `make install` as root.
 
 Some build options are available as `make` variables. You can change the system
-config file location, systemd unit file location, and others. Look at the Makefile
-for details.
+config file location, systemd unit file location, and others. Look at the
+Makefile for details.
 
 Running
 -------
 
 ### Telegram Token
 
-To run this bot, you first need to get an API token from Telegram. The directions
-for doing that are [here](https://core.telegram.org/bots).
+To run this bot, you first need to get an API token from Telegram. The
+directions for doing that are [here](https://core.telegram.org/bots).
 
 Once you have your API token, run SquirrelBot with the required command-line
 arguments:
 
 ```sh
-squirrelbot --address=http://myserver.example.com --port=80 --token=<your telegram token>
+squirrelbot --address=http://myserver.example.com --port=80 \
+  --token=<your Telegram token>
 ```
 
 ### Ports
@@ -59,12 +60,43 @@ You can optionally specify a directory to download the videos to with the
 `--dir` argument:
 
 ```sh
-squirrelbot --address=myserver.example.com --port=80 --token=<your telegram token> \
-	--dir="Youtube Videos"
+squirrelbot --address=http://myserver.example.com --port=80 \
+  --token=<your Telegram token> --dir="Youtube Videos"
 ```
 
-Transfering Video Files
------------------------
+### MOTD
+
+If you want SquirrelBot to respond to "/start" messages (which is a commonly
+used phrase for starting conversations with Telegram bots), you should set the
+motd (message of the day) flag:
+
+```sh
+squirrelbot --address=http://myserver.example.com --port=80 \
+  --token=<your Telegram token> --motd="Hello! Try sending me a link."
+```
+
+### Configuration with a YAML file
+
+All command line options can also be set in a YAML config file (command line
+options override config file options). By default, SquirrelBot looks for the
+config file at `/etc/squirrelbot/config.yaml`
+
+Here is an example config file:
+
+```yaml
+address: https://myserver.example.com
+port: 80
+token: <your Telegram token>
+directory: Youtube Videos
+motd: Hello! Try sending me a link.
+```
+
+--------------------------------------------------------------------------------
+
+Tips
+----
+
+### Transfering Video Files
 
 SquirrelBot downloads videos to a local directory that can be specified with the
 `--dir` option. The videos are formatted to be easy to view in Kodi. If you run
@@ -72,7 +104,7 @@ this bot on a different server than your Kodi/media server, you will want to
 transfer your video files to your Kodi or media server box. Here are a couple
 ways to do that.
 
-### Sync with rsync
+#### Sync with rsync
 
 *	On the receiving end, set up an rsync daemon that allows write-only access
 	to the right directory.
@@ -81,7 +113,7 @@ ways to do that.
 *	Optionally, after the file is successfully send, the script should delete
 	the file from the server.
 
-### Sync with Syncthing
+#### Sync with Syncthing
 
 You can use Syncthing to send video files to their final destination.
 See https://docs.syncthing.net/intro/getting-started.html for instructions.
