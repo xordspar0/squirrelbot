@@ -9,7 +9,6 @@
       - [ ] Debian
 - [ ] Handle videos from other websites
 - [ ] Detect IP address if no server name is specified?
-- [ ] Stash links
 - [ ] toGoogle
       - Start a message with `/search`.
       - Squirrelbot will respond with "Let me {Google} that for you."

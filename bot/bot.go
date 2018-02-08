@@ -86,9 +86,11 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		log.Error("Message has no sender")
 	} else {
 		if message.Text == "/start" {
-			err = b.SendMotd(message.Chat.ID)
-			if err != nil {
-				log.Error(err.Error())
+			if b.Motd != "" {
+				err = b.SendMotd(message.Chat.ID)
+				if err != nil {
+					log.Error(err.Error())
+				}
 			}
 		} else if url := xurls.Strict.FindString(message.Text); url != "" {
 			if strings.HasPrefix(url, "http://www.youtube.com") ||
