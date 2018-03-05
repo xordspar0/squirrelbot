@@ -10,7 +10,7 @@ squirrelbot - a Telegram bot that stashes links
 SYNOPSIS
 --------
 
-*squirrelbot* --address=VALUE [--port=VALUE] --token=VALUE [--dir=VALUE]
+*squirrelbot* [--config=FILE_PATH] [OPTIONS]
 
 *squirrelbot* --help | -h
 
@@ -20,18 +20,39 @@ DESCRIPTION
 SquirrelBot is a Telegram bot that saves links that you send it for viewing
 later. It saves Youtube videos and formats them for easy viewing in Kodi.
 
-OPTIONS
--------
+CONFIGURATION
+-------------
 
-*--address*=<Web address> ::
+Configuration options may be specified in a configuration file or as command
+line options. The default configuration file can be specified at compile time,
+but it is /etc/squirrelbot/config.yaml by default. A different file may be
+specified with the --config command line option (see OPTIONS).
+
+Config files are YAML files. Specify options with the following syntax:
+
+----
+address: example.com
+token: 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+----
+
+Specify options from the command line with the following syntax:
+
+----
+squirrelbot --address=example.com --token=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+----
+
+Configuration Options
+~~~~~~~~~~~~~~~~~~~~~
+
+*address*::
 	The domain name or IP address of the server where this bot can be
 	reached.
 
-*--token*=<telegram token> ::
+*token*::
 	The authentication token for the Telegram API. You can find directions
 	for obtaining your token at <https://core.telegram.org/bots>.
 
-*--port*=<port number> ::
+*port*::
 +
 --
 The port to run the server on. *Default*: 1327
@@ -44,14 +65,21 @@ Just make sure to use the appropriate port for your url scheme:
 *	Port 443 for https://
 --
 
-*--dir, -d*=<path> ::
+*dir* (also *-d*=<path>)::
 	The directory to store downloaded files.
 
-*--version, -v* ::
-	Show the version and exit.
+OPTIONS
+-------
+
+*--config*=<config file path> ::
+  A configuration file to use instead of the default (usually
+  /etc/squirrelbot/config.yaml)
 
 *--help, -h* ::
 	Show the help message and exit.
+
+*--version, -v* ::
+	Show the version and exit.
 
 TRANSFERING VIDEO FILES
 -----------------------
@@ -62,7 +90,8 @@ this bot on a different server than your Kodi/media center, you will want to
 transfer your video files to your Kodi or media center box. Here are a couple
 ways to do that.
 
-.Sync with rsync
+Sync with rsync
+~~~~~~~~~~~~~~~
 
 *	On the receiving end, set up an rsync daemon that allows write-only access
 	to the right directory.
@@ -71,7 +100,8 @@ ways to do that.
 *	Optionally, after the file is successfully send, the script should delete
 	the file from the server.
 
-.Sync with Syncthing
+Sync with Syncthing
+~~~~~~~~~~~~~~~~~~~
 
 You can use Syncthing to send video files to their final destination. See
 https://docs.syncthing.net/intro/getting-started.html for instructions.
