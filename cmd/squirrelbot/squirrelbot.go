@@ -18,12 +18,6 @@ var version = "devel"
 var systemConfigFile = ""
 var app *cli.App
 
-func init() {
-	log.SetLevel(log.InfoLevel)
-	log.SetFormatter(&log.TextFormatter{})
-	log.SetOutput(os.Stdout)
-}
-
 func main() {
 	app := cli.NewApp()
 	app.Name = botname
@@ -65,22 +59,21 @@ func main() {
 			Usage:  "A message of the day to send to new users",
 			EnvVar: "SQUIRRELBOT_MOTD",
 		},
+		cli.BoolFlag{
+			Name:   "debug",
+			Usage:  "Enable debug messages",
+			EnvVar: "SQUIRRELBOT_DEBUG",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatalln(err.Error())
+		log.Fatal(err.Error())
 	}
 }
 
 func run(c *cli.Context) error {
-	// Generate a random secret for the webhook endpoint. If the endpoint is a
-	// secret between Telegram and the bot, we can be sure that requests to this
-	// port are from Telegram.
-	var max big.Int
-	max.Exp(big.NewInt(2), big.NewInt(128), nil)
-	randomSecret, err := rand.Int(rand.Reader, &max)
-	if err != nil {
-		return err
+	if c.Bool("debug") {
+		log.SetLevel(log.DebugLevel)
 	}
 
 	squirrelbotServer := &bot.BotServer{}
@@ -92,7 +85,9 @@ func run(c *cli.Context) error {
 		}
 	} else if systemConfigFile != "" {
 		if err := squirrelbotServer.LoadConfigFromFile(systemConfigFile); err != nil {
-			log.Printf("Could not load system config file %s", err.Error())
+			log.WithFields(log.Fields{
+				"config_file": systemConfigFile,
+			}).Debug("Could not load system config file: ", err.Error())
 		}
 	}
 
@@ -113,14 +108,30 @@ func run(c *cli.Context) error {
 		squirrelbotServer.Motd = motd
 	}
 
-	squirrelbotServer.Endpoint = fmt.Sprintf("/%s_%x/", botname, randomSecret)
-
+	var missingParameters int = 0
 	if squirrelbotServer.Address == "" {
-		return errors.New("Server address is not set")
+		log.Error("Server address is not set")
+		missingParameters++
 	}
 	if squirrelbotServer.Token == "" {
-		return errors.New("Telegram API token is not set")
+		log.Error("Telegram API token is not set")
+		missingParameters++
 	}
+	if missingParameters > 0 {
+		cli.ShowAppHelp(c)
+		return errors.New("Missing required parameters")
+	}
+
+	// Generate a random secret for the webhook endpoint. If the endpoint is a
+	// secret between Telegram and the bot, we can be sure that requests to this
+	// port are from Telegram.
+	var max big.Int
+	max.Exp(big.NewInt(2), big.NewInt(128), nil)
+	randomSecret, err := rand.Int(rand.Reader, &max)
+	if err != nil {
+		return err
+	}
+	squirrelbotServer.Endpoint = fmt.Sprintf("/%s_%x/", botname, randomSecret)
 
 	return squirrelbotServer.Start()
 }
