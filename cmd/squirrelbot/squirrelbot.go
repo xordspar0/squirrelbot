@@ -40,7 +40,7 @@ func main() {
 		},
 		cli.IntFlag{
 			Name:   "port",
-			Value:  1327,
+			Value:  80,
 			Usage:  "The port to run the server on",
 			EnvVar: "SQUIRRELBOT_PORT",
 		},

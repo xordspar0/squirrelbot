@@ -4,7 +4,7 @@ prefix=/usr/local
 systemd_unit_path=/etc/systemd/system
 system_config_file=/etc/squirrelbot/config.yaml
 
-.PHONY: build clean fmt install snap test uninstall
+.PHONY: build docker clean fmt install snap test uninstall
 
 # Building Commands
 
@@ -14,12 +14,18 @@ build:
 squirrelbot.1: doc/squirrelbot.txt
 	a2x -f manpage doc/squirrelbot.txt
 
-snap: build squirrelbot.1
+buildall: build squirrelbot.1
+
+docker:
+	env CGO_ENABLED=0 GOOS=linux go build -ldflags "-X main.version=$(version) -X main.systemConfigFile=$(system_config_file)" -o "bin/$(binname).docker" ./cmd/squirrelbot
+	docker build . -f packages/Dockerfile -t squirrelbot:$(version)
+
+snap: buildall
 	packages/build_snap.sh $(version)
 
 # Installing Commands
 
-install: build squirrelbot.1
+install: buildall
 	install -Dm 755 "bin/$(binname)" "$(prefix)/bin/$(binname)"
 	install -Dm 644 system/squirrelbot.service "$(systemd_unit_path)/squirrelbot.service"
 	install -Dm 644 doc/squirrelbot.1 "$(prefix)/share/man/man1/squirrelbot.1"
