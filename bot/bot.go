@@ -105,16 +105,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 				"message ID": message.ID,
 			})
 
-			if strings.HasPrefix(url, "http://www.youtube.com") ||
-				strings.HasPrefix(url, "https://www.youtube.com") ||
-				strings.HasPrefix(url, "http://m.youtube.com") ||
-				strings.HasPrefix(url, "https://m.youtube.com") ||
-				strings.HasPrefix(url, "http://youtu.be") ||
-				strings.HasPrefix(url, "https://youtu.be") ||
-				strings.HasPrefix(url, "http://vimeo.com") ||
-				strings.HasPrefix(url, "https://vimeo.com") ||
-				strings.HasPrefix(url, "http://player.vimeo.com") ||
-				strings.HasPrefix(url, "https://player.vimeo.com") {
+			if isYoutubeSource(url) {
 				log.WithFields(log.Fields{
 					"url":  url,
 					"user": username,
