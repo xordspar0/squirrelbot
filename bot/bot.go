@@ -70,6 +70,12 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 	}
 
+	log.WithFields(log.Fields{
+		"ID":   message.ID,
+		"body": message.Text,
+		"from": message.From.ID,
+	}).Debug("Received message")
+
 	var username string
 	if message.From.Username != "" {
 		username = message.From.Username
@@ -93,6 +99,12 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		} else if url := xurls.Strict.FindString(message.Text); url != "" {
+			infoLogger := log.WithFields(log.Fields{
+				"url":        url,
+				"user":       username,
+				"message ID": message.ID,
+			})
+
 			if strings.HasPrefix(url, "http://www.youtube.com") ||
 				strings.HasPrefix(url, "https://www.youtube.com") ||
 				strings.HasPrefix(url, "http://m.youtube.com") ||
@@ -107,12 +119,10 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 					"url":  url,
 					"user": username,
 				}).Info("Stashing video")
+				infoLogger.Info("Stashing video")
 				handleYoutube(url, b.Directory, message.Chat.ID, b.Token)
 			} else {
-				log.WithFields(log.Fields{
-					"url":  url,
-					"user": username,
-				}).Info("Stashing link")
+				infoLogger.Info("Stashing link")
 				handleLink(message, url, message.Chat.ID, b.Token, b.PocketKey, b.PocketUserToken)
 			}
 		}
