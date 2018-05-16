@@ -48,7 +48,8 @@ func (c *PocketClient) Add(url string) (title string, err error) {
 	if response.StatusCode != 200 {
 		log.WithFields(log.Fields{
 			"status code": response.StatusCode,
-			"response body": responseBody,
+			"response body": string(responseBody),
+			"response headers": response.Header,
 		}).Debug("Pocket returned a non-200 status code")
 
 		return "", errors.New("Pocket returned " + string(responseBody))
