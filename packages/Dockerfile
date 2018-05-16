@@ -1,9 +1,16 @@
-FROM alpine:latest
+FROM golang:1.9.2-alpine3.6 AS build
+ARG version=devel
 
-RUN apk --update --no-cache add \
-  ca-certificates \
-  youtube-dl
+# Install build tools
+RUN apk add --no-cache git
+RUN go get github.com/golang/dep/cmd/dep
 
-ADD bin/squirrelbot.docker /usr/local/bin/squirrelbot
+# Copy and build squirrelbot
+COPY . /go/src/github.com/xordspar0/squirrelbot/
+WORKDIR /go/src/github.com/xordspar0/squirrelbot/
+RUN dep ensure -vendor-only
+RUN go build -ldflags "-X main.version=${version}" -o "/bin/squirrelbot.docker" ./cmd/squirrelbot
 
-CMD ["/usr/local/bin/squirrelbot"]
+FROM scratch
+COPY --from=build /bin/squirrelbot.docker /bin/squirrelbot
+CMD ["/bin/squirrelbot"]

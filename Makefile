@@ -16,10 +16,6 @@ squirrelbot.1: doc/squirrelbot.txt
 
 buildall: build squirrelbot.1
 
-docker:
-	env CGO_ENABLED=0 GOOS=linux go build -ldflags "-X main.version=$(version) -X main.systemConfigFile=$(system_config_file)" -o "bin/$(binname).docker" ./cmd/squirrelbot
-	docker build . -f packages/Dockerfile -t squirrelbot:$(version)
-
 snap: buildall
 	packages/build_snap.sh $(version)
 
