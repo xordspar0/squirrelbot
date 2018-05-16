@@ -1,6 +1,8 @@
 package pocket
 
 import (
+	log "github.com/sirupsen/logrus"
+
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -44,6 +46,11 @@ func (c *PocketClient) Add(url string) (title string, err error) {
 	}
 
 	if response.StatusCode != 200 {
+		log.WithFields(log.Fields{
+			"status code": response.StatusCode,
+			"response body": responseBody,
+		}).Debug("Pocket returned a non-200 status code")
+
 		return "", errors.New("Pocket returned " + string(responseBody))
 	}
 
