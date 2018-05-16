@@ -71,9 +71,9 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.WithFields(log.Fields{
-		"ID":   message.ID,
-		"body": message.Text,
-		"from": message.From.ID,
+		"message ID": message.ID,
+		"body":       message.Text,
+		"from":       message.From.ID,
 	}).Debug("Received message")
 
 	var username string
@@ -106,10 +106,6 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 			})
 
 			if isYoutubeSource(url) {
-				log.WithFields(log.Fields{
-					"url":  url,
-					"user": username,
-				}).Info("Stashing video")
 				infoLogger.Info("Stashing video")
 				handleYoutube(url, b.Directory, message.Chat.ID, b.Token)
 			} else {
