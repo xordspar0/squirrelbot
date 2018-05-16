@@ -9,7 +9,7 @@ RUN go get github.com/golang/dep/cmd/dep
 COPY . /go/src/github.com/xordspar0/squirrelbot/
 WORKDIR /go/src/github.com/xordspar0/squirrelbot/
 RUN dep ensure -vendor-only
-RUN go build -ldflags "-X main.version=${version}" -o "/bin/squirrelbot.docker" ./cmd/squirrelbot
+RUN env CGO_ENABLED=0 go build -ldflags "-X main.version=${version}" -o "/bin/squirrelbot.docker" ./cmd/squirrelbot
 
 FROM scratch
 COPY --from=build /bin/squirrelbot.docker /bin/squirrelbot
