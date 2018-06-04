@@ -1,7 +1,8 @@
 package youtubedl
 
 import (
-	"errors"
+	log "github.com/sirupsen/logrus"
+
 	"io/ioutil"
 	"os/exec"
 	"strings"
@@ -95,22 +96,23 @@ func GetDescription(url string) string {
 func downloadFile(cmd *exec.Cmd) error {
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		return errors.New("youtubedl: Failed to download video: " + err.Error())
+		return err
 	}
 
 	err = cmd.Start()
 	if err != nil {
-		return errors.New("youtubedl: Failed to download video: " + err.Error())
+		return err
 	}
 
 	// Catch any error messgages while the process is running.
 	errMessages, err := ioutil.ReadAll(stderr)
 	if err != nil {
-		return errors.New("youtubedl: " + err.Error())
+		return err
 	}
 	err = cmd.Wait()
 	if err != nil {
-		return errors.New("External program youtube-dl: \n" + string(errMessages))
+		log.Debug(string(errMessages))
+		return err
 	}
 
 	return nil
