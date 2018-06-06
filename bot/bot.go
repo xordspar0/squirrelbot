@@ -64,6 +64,10 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 	}
 
+	log.WithFields(log.Fields{
+		"request body": string(rawBody),
+	}).Debug("Received request")
+
 	message, err := telegram.GetMessage(rawBody)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -74,7 +78,7 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		"message ID": message.ID,
 		"body":       message.Text,
 		"from":       message.From.ID,
-	}).Debug("Received message")
+	}).Debug("Parsed message")
 
 	var username string
 	if message.From.Username != "" {
