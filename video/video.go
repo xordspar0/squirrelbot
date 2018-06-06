@@ -18,17 +18,32 @@ type Video struct {
 	fileName     string
 }
 
-func NewVideo(url string) *Video {
+func NewVideo(url string) (*Video, error) {
 	currentTime := time.Now().Local()
-	v := &Video{
-		Url:          url,
-		Title:        youtubedl.GetTitle(url),
-		Description:  youtubedl.GetDescription(url),
-		downloadDate: currentTime,
-		fileName:     fmt.Sprintf("%s %s", currentTime.Format(time.RFC3339), youtubedl.GetTitleSafe(url)),
+	title, err := youtubedl.GetTitle(url)
+	if err != nil {
+		return &Video{}, err
 	}
 
-	return v
+	description, err := youtubedl.GetDescription(url)
+	if err != nil {
+		return &Video{}, err
+	}
+
+	filename, err := youtubedl.GetTitleSafe(url)
+	if err != nil {
+		return &Video{}, err
+	}
+
+	v := &Video{
+		Url:          url,
+		Title:        title,
+		Description:  description,
+		downloadDate: currentTime,
+		fileName:     fmt.Sprintf("%s %s", currentTime.Format(time.RFC3339), filename),
+	}
+
+	return v, nil
 }
 
 func (v *Video) WriteVideo(directory string) error {

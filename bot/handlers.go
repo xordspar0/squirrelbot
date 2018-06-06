@@ -14,7 +14,7 @@ import (
 // back to the user.
 func handleYoutube(url, directory string, recipient int, token string) error {
 	// Get the video metadata.
-	v := video.NewVideo(url)
+	v, err := video.NewVideo(url)
 
 	var videoTitle string
 	if v.Title != "" {
@@ -23,18 +23,13 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 		videoTitle = "that video"
 	}
 
-	err := v.WriteVideo(directory)
 	if err != nil {
-		var message string
-		if v.Title != "" {
-			message = fmt.Sprintf("I couldn't save your video, \"%s\".", v.Title)
-		} else {
-			message = "I couldn't save that video."
-		}
+		goto videoFail
+	}
 
-		telegram.SendMessage(recipient, message, token)
-		log.Error(err.Error())
-		return err
+	err = v.WriteVideo(directory)
+	if err != nil {
+		goto videoFail
 	}
 
 	err = v.WriteThumb(directory)
@@ -69,6 +64,18 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 	}
 
 	return nil
+
+videoFail:
+	var message string
+	if v.Title != "" {
+		message = fmt.Sprintf("I couldn't save your video, \"%s\".", v.Title)
+	} else {
+		message = "I couldn't save that video."
+	}
+
+	telegram.SendMessage(recipient, message, token)
+	log.Error(err.Error())
+	return err
 }
 
 func handleLink(message telegram.Message, url string, recipient int, token, pocketKey, pocketUserToken string) error {

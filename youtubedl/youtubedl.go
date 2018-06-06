@@ -58,7 +58,7 @@ func DownloadThumbnailTo(url, fileName string) error {
 }
 
 // GetTitle returns the name of a video.
-func GetTitle(url string) (videoTitle string) {
+func GetTitle(url string) (string, error) {
 	cmd := exec.Command(
 		"youtube-dl",
 		"--get-title",
@@ -70,7 +70,7 @@ func GetTitle(url string) (videoTitle string) {
 
 // GetTitleSafe returns the video's title, but transforms it to be safe to be used
 // as a filename.
-func GetTitleSafe(url string) string {
+func GetTitleSafe(url string) (string, error) {
 	cmd := exec.Command(
 		"youtube-dl",
 		"--get-filename",
@@ -83,7 +83,7 @@ func GetTitleSafe(url string) string {
 }
 
 // GetDescription returns the description of a video.
-func GetDescription(url string) string {
+func GetDescription(url string) (string, error) {
 	cmd := exec.Command(
 		"youtube-dl",
 		"--get-description",
@@ -111,36 +111,35 @@ func downloadFile(cmd *exec.Cmd) error {
 	}
 	err = cmd.Wait()
 	if err != nil {
-		log.Debug(string(errMessages))
+		log.Debug("Command output: ", string(errMessages))
 		return err
 	}
 
 	return nil
 }
 
-// getCmdResponse runs a command and returns its output. If there are any errors
-// in the command, then just return an empty string.
-func getCmdOutput(cmd *exec.Cmd) string {
+// getCmdResponse runs a command and returns its output.
+func getCmdOutput(cmd *exec.Cmd) (string, error) {
 	stdout, err := cmd.StdoutPipe()
 	var out []byte
 	if err != nil {
-		return ""
+		return "", err
 	}
 
 	err = cmd.Start()
 	if err != nil {
-		return ""
+		return "", err
 	}
 
 	out, err = ioutil.ReadAll(stdout)
 	if err != nil {
-		return ""
+		return "", err
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		return ""
+		return "", err
 	}
 
-	return strings.TrimSpace(string(out))
+	return strings.TrimSpace(string(out)), nil
 }
