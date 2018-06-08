@@ -111,10 +111,10 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 
 			if isYoutubeSource(url) {
 				infoLogger.Info("Stashing video")
-				handleYoutube(url, b.Directory, message.Chat.ID, b.Token)
+				go handleYoutube(url, b.Directory, message.Chat.ID, b.Token)
 			} else {
 				infoLogger.Info("Stashing link")
-				handleLink(message, url, message.Chat.ID, b.Token, b.PocketKey, b.PocketUserToken)
+				go handleLink(message, url, message.Chat.ID, b.Token, b.PocketKey, b.PocketUserToken)
 			}
 		}
 	}
