@@ -10,7 +10,8 @@
 [[projects]]
   name = "github.com/urfave/cli"
   packages = ["."]
-  revision = "cf33a9befefdd6c6ea1a236ab6d546e797a62cbf"
+  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
+  version = "v1.20.0"
 
 [[projects]]
   branch = "master"
@@ -21,13 +22,17 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix","windows"]
+  packages = [
+    "unix",
+    "windows"
+  ]
   revision = "37707fdb30a5b38865cfb95e5aab41707daec7fd"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b"
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
 
 [[projects]]
   name = "mvdan.cc/xurls"
@@ -38,6 +43,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "72249cff8d18f41de7e4eaabe5cd34f2224f7a94753bbd3303a66f6c0b3b5355"
+  inputs-digest = "6acf8032af60da67e54932325051948f3609266090e59be6220cde9a1d2aa3ce"
   solver-name = "gps-cdcl"
   solver-version = 1
