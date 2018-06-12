@@ -38,6 +38,11 @@ func main() {
 			Usage:  "The authentication token for the Telegram API (required)",
 			EnvVar: "TELEGRAM_TOKEN",
 		},
+		cli.StringFlag{
+			Name:   "pocket-key",
+			Usage:  "The access key for the Pocket API",
+			EnvVar: "POCKET_KEY",
+		},
 		cli.IntFlag{
 			Name:   "port",
 			Value:  80,
@@ -100,6 +105,9 @@ func run(c *cli.Context) error {
 	}
 	if token := c.String("token"); token != "" {
 		squirrelbotServer.Token = token
+	}
+	if pocketKey := c.String("pocket-key"); pocketKey != "" {
+		squirrelbotServer.PocketKey = pocketKey
 	}
 	if directory := c.String("dir"); directory != "" {
 		squirrelbotServer.Directory = directory

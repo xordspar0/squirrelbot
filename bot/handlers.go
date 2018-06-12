@@ -78,10 +78,10 @@ videoFail:
 	return err
 }
 
-func handleLink(message telegram.Message, url string, recipient int, token, pocketKey, pocketUserToken string) error {
+func handleLink(message telegram.Message, url string, recipient int, token, pocketKey string) error {
 	a := article.NewArticle(url)
 
-	err := a.Save(pocketKey, pocketUserToken)
+	err := a.Save(pocketKey)
 	if err != nil {
 		var message string
 		if a.Title != "" {
