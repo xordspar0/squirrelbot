@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"github.com/xordspar0/squirrelbot/article"
 	"github.com/xordspar0/squirrelbot/telegram"
 	"github.com/xordspar0/squirrelbot/video"
 
@@ -12,7 +11,7 @@ import (
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
 // back to the user.
-func handleYoutube(url, directory string, recipient int, token string) error {
+func (b *BotServer) handleYoutube(url, directory string, recipient int) {
 	// Get the video metadata.
 	v, err := video.NewVideo(url)
 
@@ -37,7 +36,7 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 		telegram.SendMessage(
 			recipient,
 			fmt.Sprintf("I couldn't save a thumbnail for \"%s\".", videoTitle),
-			token,
+			b.Token,
 		)
 		log.Error(err.Error())
 	}
@@ -47,7 +46,7 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 		telegram.SendMessage(
 			recipient,
 			fmt.Sprintf("I couldn't save the metadata for \"%s\".", videoTitle),
-			token,
+			b.Token,
 		)
 		log.Error(err.Error())
 	}
@@ -56,14 +55,13 @@ func handleYoutube(url, directory string, recipient int, token string) error {
 	err = telegram.SendMessage(
 		recipient,
 		fmt.Sprintf("I saved your Youtube video, \"%s\".", videoTitle),
-		token,
+		b.Token,
 	)
 	if err != nil {
 		log.Error(err.Error())
-		return err
 	}
 
-	return nil
+	return
 
 videoFail:
 	var message string
@@ -73,37 +71,18 @@ videoFail:
 		message = "I couldn't save that video."
 	}
 
-	telegram.SendMessage(recipient, message, token)
+	telegram.SendMessage(recipient, message, b.Token)
 	log.Error(err.Error())
-	return err
+	return
 }
 
-func handleLink(message telegram.Message, url string, recipient int, token, pocketKey, pocketUserToken string) error {
-	a := article.NewArticle(url)
-
-	err := a.Save(pocketKey, pocketUserToken)
-	if err != nil {
-		var message string
-		if a.Title != "" {
-			message = fmt.Sprintf("I couldn't save your article, \"%s\".", a.Title)
-		} else {
-			message = "I couldn't save that article."
-		}
-
-		telegram.SendMessage(recipient, message, token)
-		log.Error(err.Error())
-		return err
-	}
-
-	// Finally, report a successful save to the user.
-	err = telegram.SendMessage(
+func (b *BotServer) handleUnknown(recipient int) {
+	err := telegram.SendMessage(
 		recipient,
-		fmt.Sprintf("I saved your article, \"%s\".", a.Title),
-		token,
+		"That doesn't look like a video I can save. Contact the developer if "+
+			"you would like me to be able to save this type of video",
+		b.Token,
 	)
-	if err != nil {
-		log.Error(err.Error())
-		return err
-	}
-	return nil
+	log.Error(err.Error())
+	return
 }

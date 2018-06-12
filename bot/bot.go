@@ -15,14 +15,12 @@ import (
 )
 
 type BotServer struct {
-	Address         string `yaml:"address"`
-	Port            string `yaml:"port"`
-	Token           string `yaml:"token"`
-	Directory       string `yaml:"directory"`
-	Motd            string `yaml:"motd"`
-	Endpoint        string
-	PocketKey       string `yaml:"pocket_key"`
-	PocketUserToken string `yaml:"pocket_user_token"`
+	Address   string `yaml:"address"`
+	Port      string `yaml:"port"`
+	Token     string `yaml:"token"`
+	Directory string `yaml:"directory"`
+	Motd      string `yaml:"motd"`
+	Endpoint  string
 }
 
 func (b *BotServer) LoadConfigFromFile(fileName string) error {
@@ -111,10 +109,9 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 
 			if isYoutubeSource(url) {
 				infoLogger.Info("Stashing video")
-				go handleYoutube(url, b.Directory, message.Chat.ID, b.Token)
+				go b.handleYoutube(url, b.Directory, message.Chat.ID)
 			} else {
-				infoLogger.Info("Stashing link")
-				go handleLink(message, url, message.Chat.ID, b.Token, b.PocketKey, b.PocketUserToken)
+				go b.handleUnknown(message.Chat.ID)
 			}
 		}
 	}
