@@ -79,8 +79,8 @@ videoFail:
 func (b *BotServer) handleUnknown(recipient int) {
 	err := telegram.SendMessage(
 		recipient,
-		"That doesn't look like a video I can save. Contact the developer if "+
-			"you would like me to be able to save this type of video",
+		"That doesn't look like a video that I can save. Contact the developer"+
+			"if you would like me to be able to save this type of video.",
 		b.Token,
 	)
 	log.Error(err.Error())
