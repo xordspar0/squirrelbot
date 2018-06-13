@@ -11,7 +11,7 @@ import (
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
 // back to the user.
-func (b *Server) handleYoutube(url, directory string, recipient int) {
+func (s *Server) handleYoutube(url, directory string, recipient int) error {
 	// Get the video metadata.
 	v, err := video.NewVideo(url)
 
@@ -36,7 +36,7 @@ func (b *Server) handleYoutube(url, directory string, recipient int) {
 		telegram.SendMessage(
 			recipient,
 			fmt.Sprintf("I couldn't save a thumbnail for \"%s\".", videoTitle),
-			b.Token,
+			s.Token,
 		)
 		log.Error(err.Error())
 	}
@@ -46,7 +46,7 @@ func (b *Server) handleYoutube(url, directory string, recipient int) {
 		telegram.SendMessage(
 			recipient,
 			fmt.Sprintf("I couldn't save the metadata for \"%s\".", videoTitle),
-			b.Token,
+			s.Token,
 		)
 		log.Error(err.Error())
 	}
@@ -55,13 +55,12 @@ func (b *Server) handleYoutube(url, directory string, recipient int) {
 	err = telegram.SendMessage(
 		recipient,
 		fmt.Sprintf("I saved your Youtube video, \"%s\".", videoTitle),
-		b.Token,
+		s.Token,
 	)
 	if err != nil {
 		log.Error(err.Error())
 	}
-
-	return
+	return err
 
 videoFail:
 	var message string
@@ -71,18 +70,20 @@ videoFail:
 		message = "I couldn't save that video."
 	}
 
-	telegram.SendMessage(recipient, message, b.Token)
+	telegram.SendMessage(recipient, message, s.Token)
 	log.Error(err.Error())
-	return
+	return err
 }
 
-func (b *Server) handleUnknown(recipient int) {
+func (s *Server) handleUnknown(recipient int) error {
 	err := telegram.SendMessage(
 		recipient,
 		"That doesn't look like a video that I can save. Contact the developer"+
 			"if you would like me to be able to save this type of video.",
-		b.Token,
+		s.Token,
 	)
-	log.Error(err.Error())
-	return
+	if err != nil {
+		log.Error(err.Error())
+	}
+	return err
 }

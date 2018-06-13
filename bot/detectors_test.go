@@ -5,7 +5,7 @@ import (
 )
 
 func TestIsYoutubeSourceValid(t *testing.T) {
-	url := "https://www.youtube.com/v=12345"
+	url := "https://www.youtube.com/watch?v=CKIye4RZ-5k"
 	if !isYoutubeSource(url) {
 		t.Fail()
 	}
