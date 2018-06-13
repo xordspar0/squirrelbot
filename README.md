@@ -91,8 +91,6 @@ directory: Youtube Videos
 motd: Hello! Try sending me a link.
 ```
 
---------------------------------------------------------------------------------
-
 Tips
 ----
 
@@ -117,3 +115,15 @@ ways to do that.
 
 You can use Syncthing to send video files to their final destination.
 See https://docs.syncthing.net/intro/getting-started.html for instructions.
+
+License
+-------
+
+Copyright © 2017-2018 Jordan Christiansen.
+
+Squirrelbot is distributed under the terms of the GNU GPL version 3 or later.
+This is free software: you are free to change and redistribute it. There is
+NO WARRANTY, to the extent permitted by law.
+
+The full text of the GPL version 3 is in the file LICENSE. For more
+information, visit http://gnu.org/licenses/gpl.html.
