@@ -76,7 +76,7 @@ func run(c *cli.Context) error {
 		log.SetLevel(log.DebugLevel)
 	}
 
-	squirrelbotServer := &bot.BotServer{}
+	squirrelbotServer := &bot.Server{}
 
 	// Load config from a file first.
 	if fileName := c.String("config"); fileName != "" {
@@ -108,7 +108,7 @@ func run(c *cli.Context) error {
 		squirrelbotServer.Motd = motd
 	}
 
-	var missingParameters int = 0
+	var missingParameters int
 	if squirrelbotServer.Address == "" {
 		log.Error("Server address is not set")
 		missingParameters++

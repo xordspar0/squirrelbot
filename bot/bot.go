@@ -14,7 +14,9 @@ import (
 	"strings"
 )
 
-type BotServer struct {
+// The Server contains all of the settings related to a running instance of the
+// bot. You can set the fields individually or load them from a YAML file.
+type Server struct {
 	Address   string `yaml:"address"`
 	Port      string `yaml:"port"`
 	Token     string `yaml:"token"`
@@ -23,8 +25,10 @@ type BotServer struct {
 	Endpoint  string
 }
 
-func (b *BotServer) LoadConfigFromFile(fileName string) error {
-	file, err := os.Open(fileName)
+// LoadConfigFromFile fills in settings for the server from a YAML file,
+// specified by a filename.
+func (s *Server) LoadConfigFromFile(filename string) error {
+	file, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
@@ -34,7 +38,7 @@ func (b *BotServer) LoadConfigFromFile(fileName string) error {
 		return err
 	}
 
-	err = yaml.Unmarshal(data, b)
+	err = yaml.Unmarshal(data, s)
 	if err != nil {
 		return err
 	}
@@ -42,20 +46,22 @@ func (b *BotServer) LoadConfigFromFile(fileName string) error {
 	return nil
 }
 
-func (b *BotServer) Start() error {
+// Start starts the bot as an HTTP server. It will listen on the port configured
+// in s.Port.
+func (s *Server) Start() error {
 	log.WithFields(log.Fields{
-		"url": b.Address + b.Endpoint,
+		"url": s.Address + s.Endpoint,
 	}).Info("Setting up endpoint")
-	http.HandleFunc(b.Endpoint, b.botListener)
-	err := telegram.SetWebhook(b.Address+b.Endpoint, b.Token)
+	http.HandleFunc(s.Endpoint, s.botListener)
+	err := telegram.SetWebhook(s.Address+s.Endpoint, s.Token)
 	if err != nil {
 		return err
 	}
 
-	return http.ListenAndServe(":"+b.Port, nil)
+	return http.ListenAndServe(":"+s.Port, nil)
 }
 
-func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
+func (s *Server) botListener(w http.ResponseWriter, r *http.Request) {
 	rawBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -94,8 +100,8 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 		log.Error("Message has no sender")
 	} else {
 		if message.Text == "/start" {
-			if b.Motd != "" {
-				err = b.SendMotd(message.Chat.ID)
+			if s.Motd != "" {
+				err = s.sendMotd(message.Chat.ID)
 				if err != nil {
 					log.Error(err.Error())
 				}
@@ -109,18 +115,18 @@ func (b *BotServer) botListener(w http.ResponseWriter, r *http.Request) {
 
 			if isYoutubeSource(url) {
 				infoLogger.Info("Stashing video")
-				go b.handleYoutube(url, b.Directory, message.Chat.ID)
+				go s.handleYoutube(url, s.Directory, message.Chat.ID)
 			} else {
-				go b.handleUnknown(message.Chat.ID)
+				go s.handleUnknown(message.Chat.ID)
 			}
 		}
 	}
 }
 
-func (b *BotServer) SendMotd(recipient int) error {
+func (s *Server) sendMotd(recipient int) error {
 	return telegram.SendMessage(
 		recipient,
-		b.Motd,
-		b.Token,
+		s.Motd,
+		s.Token,
 	)
 }

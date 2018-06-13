@@ -11,7 +11,7 @@ import (
 
 // handleYoutube takes Youtube url strings, downloads them, and sends a message
 // back to the user.
-func (b *BotServer) handleYoutube(url, directory string, recipient int) {
+func (b *Server) handleYoutube(url, directory string, recipient int) {
 	// Get the video metadata.
 	v, err := video.NewVideo(url)
 
@@ -76,7 +76,7 @@ videoFail:
 	return
 }
 
-func (b *BotServer) handleUnknown(recipient int) {
+func (b *Server) handleUnknown(recipient int) {
 	err := telegram.SendMessage(
 		recipient,
 		"That doesn't look like a video that I can save. Contact the developer"+

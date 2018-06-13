@@ -14,6 +14,7 @@ type update struct {
 	Message Message
 }
 
+// Message represents a Telegram message from the Telegram server.
 type Message struct {
 	ID   int `json:"message_id"`
 	Date int64
@@ -33,9 +34,9 @@ type Message struct {
 // Telegram where to send updates and messages.
 func SetWebhook(address, token string) error {
 	// Form request JSON.
-	reqMap := make(map[string]string)
-	reqMap["url"] = address
-	reqJson, err := json.Marshal(reqMap)
+	requestMap := make(map[string]string)
+	requestMap["url"] = address
+	requestJSON, err := json.Marshal(requestMap)
 	if err != nil {
 		return errors.New("Failed to connect to Telegram API: " + err.Error())
 	}
@@ -44,7 +45,7 @@ func SetWebhook(address, token string) error {
 	resp, err := http.Post(
 		fmt.Sprintf("https://api.telegram.org/bot%s/setWebhook", token),
 		"application/json",
-		bytes.NewReader(reqJson),
+		bytes.NewReader(requestJSON),
 	)
 
 	if err != nil {
@@ -58,12 +59,13 @@ func SetWebhook(address, token string) error {
 	return nil
 }
 
+// SendMessage sends a Telegram message to the specified recipient.
 func SendMessage(recipient int, messageBody, token string) error {
 	// Form request JSON.
-	reqMap := make(map[string]interface{})
-	reqMap["chat_id"] = recipient
-	reqMap["text"] = messageBody
-	reqJson, err := json.Marshal(reqMap)
+	requestMap := make(map[string]interface{})
+	requestMap["chat_id"] = recipient
+	requestMap["text"] = messageBody
+	requestJSON, err := json.Marshal(requestMap)
 	if err != nil {
 		return errors.New("Failed to send message: " + err.Error())
 	}
@@ -72,7 +74,7 @@ func SendMessage(recipient int, messageBody, token string) error {
 	resp, err := http.Post(
 		fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", token),
 		"application/json",
-		bytes.NewReader(reqJson),
+		bytes.NewReader(requestJSON),
 	)
 
 	if err != nil {
