@@ -4,46 +4,23 @@ import (
 	"github.com/xordspar0/squirrelbot/telegram"
 
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
 	"mvdan.cc/xurls"
 
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 )
 
 // The Server contains all of the settings related to a running instance of the
-// bot. You can set the fields individually or load them from a YAML file.
+// bot.
 type Server struct {
-	Address   string `yaml:"address"`
-	Port      string `yaml:"port"`
-	Token     string `yaml:"token"`
-	Directory string `yaml:"directory"`
-	Motd      string `yaml:"motd"`
+	Address   string
+	Port      string
+	Token     string
+	Directory string
+	Motd      string
 	Endpoint  string
-}
-
-// LoadConfigFromFile fills in settings for the server from a YAML file,
-// specified by a filename.
-func (s *Server) LoadConfigFromFile(filename string) error {
-	file, err := os.Open(filename)
-	if err != nil {
-		return err
-	}
-
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		return err
-	}
-
-	err = yaml.Unmarshal(data, s)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // Start starts the bot as an HTTP server. It will listen on the port configured

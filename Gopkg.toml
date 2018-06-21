@@ -25,13 +25,13 @@
   version = "~1.0.0"
 
 [[constraint]]
-  name = "github.com/urfave/cli"
-  version = "~1.20.0"
-
-[[constraint]]
-  name = "gopkg.in/yaml.v2"
-  version = "~2.2.1"
-
-[[constraint]]
   name = "mvdan.cc/xurls"
   version = "~1.1.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/spf13/cobra"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/spf13/viper"

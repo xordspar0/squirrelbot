@@ -9,7 +9,7 @@ system_config_file=/etc/squirrelbot/config.yaml
 # Building Commands
 
 build:
-	go build -ldflags "-X main.version=$(version) -X main.systemConfigFile=$(system_config_file)" -o "bin/$(binname)" ./cmd/squirrelbot
+	go build -ldflags "-X github.com/xordspar0/squirrelbot/cmd.version=$(version) -X github.com/xordspar0/squirrelbot/cmd.systemConfigFile=$(system_config_file)" -o "bin/$(binname)"
 
 squirrelbot.1: doc/squirrelbot.txt
 	a2x -f manpage doc/squirrelbot.txt
