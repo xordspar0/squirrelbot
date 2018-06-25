@@ -4,17 +4,17 @@ prefix=/usr/local
 systemd_unit_path=/etc/systemd/system
 system_config_file=/etc/squirrelbot/config.yaml
 
-.PHONY: build docker clean fmt install snap test uninstall
+.PHONY: build clean docker docs fmt install snap test uninstall
 
 # Building Commands
 
 build:
-	go build -ldflags "-X github.com/xordspar0/squirrelbot/cmd.version=$(version) -X github.com/xordspar0/squirrelbot/cmd.systemConfigFile=$(system_config_file)" -o "bin/$(binname)"
+	go build -ldflags "-X github.com/xordspar0/squirrelbot/cmd.version=$(version) -X github.com/xordspar0/squirrelbot/cmd.systemConfigFile=$(system_config_file)" -o "build/$(binname)"
 
-squirrelbot.1: doc/squirrelbot.txt
-	a2x -f manpage doc/squirrelbot.txt
+docs: build
+	go run -ldflags "-X github.com/xordspar0/squirrelbot/cmd.version=$(version) -X github.com/xordspar0/squirrelbot/cmd.systemConfigFile=$(system_config_file)" tools/gendocs.go > "build/$(binname).1"
 
-buildall: build squirrelbot.1
+buildall: build docs
 
 snap: buildall
 	packages/build_snap.sh $(version)
@@ -34,7 +34,7 @@ uninstall:
 # Maintenance Commands
 
 fmt:
-	gofmt -s -l -w $(shell find . -name '*.go' -not -path '*vendor*')
+	gofmt -s -l -w $(shell find . -name '*.go' -not -path './vendor*')
 
 test:
 	go test ./...

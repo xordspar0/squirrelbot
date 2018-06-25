@@ -2,7 +2,7 @@ name: squirrelbot
 version: '{{version}}'
 summary: A Telegram bot that stashes away links that you send it
 description: |
-  SquirrelBot is a Telegram bot that saves links that you send it for viewing
+  Squirrelbot is a Telegram bot that saves links that you send it for viewing
   later. Currently, it only saves Youtube videos and formats them for easy
   viewing in Kodi. On the roadmap are handling videos from other websites and
   saving arbitrary links in a personal RSS feed.

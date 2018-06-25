@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/cpuguy83/go-md2man"
+  packages = ["md2man"]
+  revision = "20f5889cbdc3c73dbd2862796665e7c465ade7d1"
+  version = "v1.0.8"
+
+[[projects]]
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
   revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
@@ -49,6 +55,12 @@
   version = "v1.2.0"
 
 [[projects]]
+  name = "github.com/russross/blackfriday"
+  packages = ["."]
+  revision = "55d61fa8aa702f59229e6cff85793c22e580eaf5"
+  version = "v1.5.1"
+
+[[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
@@ -72,7 +84,10 @@
 [[projects]]
   branch = "master"
   name = "github.com/spf13/cobra"
-  packages = ["."]
+  packages = [
+    ".",
+    "doc"
+  ]
   revision = "1e58aa3361fd650121dceeedc399e7189c05674a"
 
 [[projects]]
@@ -136,6 +151,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a2e9527637c6598c5f16a0d50e96122507653179c9707a533e07b6dacf4d29a3"
+  inputs-digest = "abed2691a6fd80aa88d5b6bc7686d74f42b24203b084fc6cfb6d13fc2ad5d863"
   solver-name = "gps-cdcl"
   solver-version = 1

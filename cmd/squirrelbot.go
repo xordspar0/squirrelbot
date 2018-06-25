@@ -11,20 +11,29 @@ import (
 	"fmt"
 	"math/big"
 	"os"
+	"strings"
 )
 
 var botname = "squirrelbot"
 var version = "devel"
 var systemConfigFile = ""
 
-var cmd = &cobra.Command{
-	Use:   botname,
-	Short: botname + " is a Telegram bot that stashes videos that you send it",
-	Long: botname + " is a Telegram bot that stashes videos. You can send it " +
-		"links to Youtube videos and it will save them for you to view " +
-		"later, complete with thumbnails, metadata, subtitles, etc.",
-	Version: version,
-	Run: func(cmd *cobra.Command, args []string) {
+var Cmd = &cobra.Command{
+	Use:               botname,
+	Short:             "a Telegram bot that stashes videos that you send it",
+	Version:           version,
+	DisableAutoGenTag: true,
+	Long: strings.Title(botname) +
+		` is a Telegram bot that stashes videos. You can send it links to
+Youtube videos and it will save them for you to view later, complete with
+thumbnails, metadata, subtitles, etc.
+
+Configuration options may be specified as command line options, as environment
+variables, or in a configuration file. The default configuration file can be
+specified at compile time, but it is /etc/squirrelbot/config.yaml by default. A
+different file may be specified with the --config command line option (see
+OPTIONS).`,
+	Run: func(Cmd *cobra.Command, args []string) {
 		var missingParameters int
 
 		if viper.GetBool("debug") {
@@ -76,7 +85,7 @@ var cmd = &cobra.Command{
 		return
 
 	exitWithUsage:
-		cmd.Usage()
+		Cmd.Usage()
 		os.Exit(1)
 		return
 	},
@@ -85,49 +94,49 @@ var cmd = &cobra.Command{
 var address string
 
 func init() {
-	cmd.PersistentFlags().StringVar(
+	Cmd.PersistentFlags().StringVar(
 		&address,
 		"address",
 		"",
-		"The address of the server where this bot can be reached (required)",
+		"The address of the server where this bot can be reached (required) ($SQUIRRELBOT_ADDRESS)",
 	)
-	cmd.PersistentFlags().String(
+	Cmd.PersistentFlags().String(
 		"telegram-token",
 		"",
-		"The authentication token for the Telegram API (required)",
+		"The authentication token for the Telegram API. You can find directions for obtaining your token at https://core.telegram.org/bots. (required) ($SQUIRRELBOT_TELEGRAM_TOKEN)",
 	)
-	cmd.PersistentFlags().IntP(
+	Cmd.PersistentFlags().IntP(
 		"port",
 		"p",
 		80,
-		"The port to run the server on",
+		"The port to run the server on ($SQUIRRELBOT_PORT)",
 	)
-	cmd.PersistentFlags().StringP(
+	Cmd.PersistentFlags().StringP(
 		"dir",
 		"d",
 		"",
-		"The directory to store downloaded files",
+		"The directory to store downloaded files ($SQUIRRELBOT_DIR)",
 	)
-	cmd.PersistentFlags().String(
+	Cmd.PersistentFlags().String(
 		"config",
 		"",
-		"The location of the server config file to use",
+		"A configuration file to use ($SQUIRRELBOT_CONFIG)",
 	)
-	cmd.PersistentFlags().StringP(
+	Cmd.PersistentFlags().StringP(
 		"motd",
 		"m",
 		"",
-		"A message of the day to send to new users",
+		"A message of the day to send to new users ($SQUIRRELBOT_MOTD)",
 	)
-	cmd.PersistentFlags().String(
+	Cmd.PersistentFlags().String(
 		"debug",
 		"",
-		"Enable debug messages",
+		"Enable debug messages ($SQUIRRELBOT_DEBUG)",
 	)
 
 	// Get configuration from flags, environment variables, and configuration
 	// files.
-	viper.BindPFlags(cmd.PersistentFlags())
+	viper.BindPFlags(Cmd.PersistentFlags())
 
 	viper.SetEnvPrefix(botname)
 	viper.AutomaticEnv()
@@ -140,5 +149,5 @@ func init() {
 }
 
 func Execute() {
-	cmd.Execute()
+	Cmd.Execute()
 }

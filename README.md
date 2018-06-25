@@ -1,7 +1,7 @@
-SquirrelBot
+Squirrelbot
 ===========
 
-SquirrelBot is a Telegram bot that saves links that you send it for viewing
+Squirrelbot is a Telegram bot that saves links that you send it for viewing
 later. Currently, it only saves Youtube videos and formats them for easy viewing
 in Kodi. On the roadmap are handling videos from other websites and saving
 arbitrary links in a personal RSS feed.
@@ -9,7 +9,7 @@ arbitrary links in a personal RSS feed.
 Building
 --------
 
-SquirrelBot is written in [Go](https://golang.org). You'll need the [Go
+Squirrelbot is written in [Go](https://golang.org). You'll need the [Go
 toolchain](https://golang.org/doc/install) to build the bot.
 
 ### Dependencies
@@ -37,7 +37,7 @@ Running
 To run this bot, you first need to get an API token from Telegram. The
 directions for doing that are [here](https://core.telegram.org/bots).
 
-Once you have your API token, run SquirrelBot with the required command-line
+Once you have your API token, run Squirrelbot with the required command-line
 arguments:
 
 ```sh
@@ -47,8 +47,8 @@ squirrelbot --address=http://myserver.example.com --port=80 \
 
 ### Ports
 
-I use a reverse proxy to forward traffic from port 443 to SquirrelBot's default
-port. You can also set up SquirrelBot directly on port 80 or 443. Just make sure
+I use a reverse proxy to forward traffic from port 443 to Squirrelbot's default
+port. You can also set up Squirrelbot directly on port 80 or 443. Just make sure
 to use the appropriate port for your url scheme:
 
 *	Port 80 for http://
@@ -66,7 +66,7 @@ squirrelbot --address=http://myserver.example.com --port=80 \
 
 ### MOTD
 
-If you want SquirrelBot to respond to "/start" messages (which is a commonly
+If you want Squirrelbot to respond to "/start" messages (which is a commonly
 used phrase for starting conversations with Telegram bots), you should set the
 motd (message of the day) flag:
 
@@ -78,7 +78,7 @@ squirrelbot --address=http://myserver.example.com --port=80 \
 ### Configuration with a YAML file
 
 All command line options can also be set in a YAML config file (command line
-options override config file options). By default, SquirrelBot looks for the
+options override config file options). By default, Squirrelbot looks for the
 config file at `/etc/squirrelbot/config.yaml`
 
 Here is an example config file:
@@ -96,7 +96,7 @@ Tips
 
 ### Transfering Video Files
 
-SquirrelBot downloads videos to a local directory that can be specified with the
+Squirrelbot downloads videos to a local directory that can be specified with the
 `--dir` option. The videos are formatted to be easy to view in Kodi. If you run
 this bot on a different server than your Kodi/media server, you will want to
 transfer your video files to your Kodi or media server box. Here are a couple

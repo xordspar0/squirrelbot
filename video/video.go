@@ -77,7 +77,7 @@ func (v *Video) WriteNfo(directory string) error {
 
 	nfoXML = []byte(fmt.Sprintf("%s\n%s\n%s",
 		`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>`,
-		fmt.Sprintf("<!-- Created on %s by SquirrelBot -->", v.downloadDate.Format(time.RFC3339)),
+		fmt.Sprintf("<!-- Created on %s by Squirrelbot -->", v.downloadDate.Format(time.RFC3339)),
 		nfoXML,
 	))
 	err = ioutil.WriteFile(fmt.Sprintf("%s/%s.nfo", directory, v.filename), nfoXML, 0644)
