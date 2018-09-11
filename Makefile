@@ -9,12 +9,15 @@ system_config_file=/etc/squirrelbot/config.yaml
 # Building Commands
 
 build:
-	go build -ldflags "-X github.com/xordspar0/squirrelbot/cmd.version=$(version) -X github.com/xordspar0/squirrelbot/cmd.systemConfigFile=$(system_config_file)" -o "build/$(binname)"
+	env CGO_ENABLED=0 go build -ldflags "-X github.com/xordspar0/squirrelbot/cmd.version=$(version) -X github.com/xordspar0/squirrelbot/cmd.systemConfigFile=$(system_config_file)" -o "build/$(binname)"
 
 docs: build
 	go run -ldflags "-X github.com/xordspar0/squirrelbot/cmd.version=$(version) -X github.com/xordspar0/squirrelbot/cmd.systemConfigFile=$(system_config_file)" tools/gendocs.go > "build/$(binname).1"
 
 buildall: build docs
+
+docker:
+	docker build . --tag $(binname)
 
 snap: buildall
 	packages/build_snap.sh $(version)
@@ -22,9 +25,12 @@ snap: buildall
 # Installing Commands
 
 install: buildall
-	install -Dm 755 "bin/$(binname)" "$(prefix)/bin/$(binname)"
-	install -Dm 644 system/squirrelbot.service "$(systemd_unit_path)/squirrelbot.service"
-	install -Dm 644 doc/squirrelbot.1 "$(prefix)/share/man/man1/squirrelbot.1"
+	install -d -m 755 "$(prefix)/bin/"
+	install -m 755 "build/$(binname)" "$(prefix)/bin/$(binname)"
+	install -d -m 755 "$(systemd_unit_path)"
+	install -m 644 system/squirrelbot.service "$(systemd_unit_path)/squirrelbot.service"
+	install -d -m 755 "$(prefix)/share/man/man1/"
+	install -m 644 build/squirrelbot.1 "$(prefix)/share/man/man1/squirrelbot.1"
 
 uninstall:
 	-rm -f "$(prefix)/bin/$(binname)"
@@ -34,11 +40,11 @@ uninstall:
 # Maintenance Commands
 
 fmt:
-	gofmt -s -l -w $(shell find . -name '*.go' -not -path './vendor*')
+	go fmt ./...
 
 test:
 	go test ./...
 
 clean:
-	-rm -rf bin/
+	-rm -rf build/
 	-rm -f squirrelbot.1
